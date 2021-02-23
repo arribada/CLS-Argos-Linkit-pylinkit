@@ -1,7 +1,10 @@
 from .dte_nus import DTENUS
 from .dte_params import DTEParamMap
+from .dte_types import BASE64
 import re
 import logging
+import binascii
+
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +37,7 @@ class DTE():
         raise Exception('Bad response - {}'.format(resp))
 
     def _decode_multi_response(self, resp):
-        return [self._decode_response(r + '\r') for r in resp.split('\r')]
+        return [self._decode_response(r + '\r') for r in resp.split('\r') if r]            
 
     def _decode_key_values(self, payload):
         m = {}
@@ -58,7 +61,12 @@ class DTE():
     def dumpd(self, log_type='sensor'):
         log_d = ['system', 'sensor']
         resp = self._nus.send(self._encode_command('DUMPD', args=['{log_d}'.format(log_d=log_d.index(log_type))]), timeout=1.0, multi_response=True)
-        return self._decode_multi_response(resp)
+        responses = self._decode_multi_response(resp)
+        raw_data = b''
+        for r in responses:
+            _, _, data = r.split(',')
+            raw_data += BASE64.decode(data)
+        return raw_data
 
     def factw(self):
         resp = self._nus.send(self._encode_command('FACTW'))

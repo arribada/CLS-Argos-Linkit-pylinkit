@@ -15,6 +15,8 @@ parser.add_argument('--rstbw', action='store_true', required=False, help='Reset 
 parser.add_argument('--factw', action='store_true', required=False, help='Factory reset')
 parser.add_argument('--write', type=argparse.FileType('r'), required=False, help='Filename to write device configuration from')
 parser.add_argument('--scan', action='store_true', required=False, help='Scan for beacons')
+parser.add_argument('--dump_sensor', type=argparse.FileType('wb'), required=False, help='Dump sensor log file')
+parser.add_argument('--dump_system', type=argparse.FileType('wb'), required=False, help='Dump system log file')
 args = parser.parse_args()
 
 
@@ -66,6 +68,14 @@ def main():
     if args.factw:
         dev.factw()
     
+    if args.dump_sensor:
+        args.dump_sensor.write(dev.dumpd('sensor'))
+        args.dump_sensor.close()
+
+    if args.dump_system:
+        args.dump_system.write(dev.dumpd('system'))
+        args.dump_system.close()
+
     if args.scan:
         result = pygatt.GATTToolBackend().scan(1)
         for x in result:

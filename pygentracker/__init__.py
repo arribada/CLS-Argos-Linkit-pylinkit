@@ -30,6 +30,9 @@ class GenTracker():
     def firmware_update(self, data, file_id=0):
         self._otafw.send_update_file(file_id, data)
 
+    def dumpd(self, log_type):
+        return self._dte.dumpd(log_type)
+
     def factw(self):
         self._dte.factw()
 
