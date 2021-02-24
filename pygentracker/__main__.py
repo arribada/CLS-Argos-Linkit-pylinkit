@@ -76,6 +76,9 @@ def main():
         args.dump_system.write(dev.dumpd('system'))
         args.dump_system.close()
 
+    if args.fw:
+        dev.firmware_update(args.fw.read(), 0)
+
     if args.scan:
         result = pygatt.GATTToolBackend().scan(1)
         for x in result:
