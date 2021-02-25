@@ -9,7 +9,6 @@ class GenTracker():
         self._backend.start()
         self._backend.reset()
         self._device = self._backend.connect(address, address_type=pygatt.BLEAddressType.random)
-        self._device.exchange_mtu(247)
         self._dte = DTE(self._device)
         self._otafw = OTAFW(self._device)
         self._map = {}

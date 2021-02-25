@@ -70,15 +70,15 @@ def main():
     if args.fw:
         dev.firmware_update(args.fw.read(), 0)
 
+    if args.factw:
+        dev.factw()
+    
     if args.rstvw:
         dev.rstvw()
     
     if args.rstbw:
         dev.rstbw()
 
-    if args.factw:
-        dev.factw()
-    
     if args.scan:
         result = pygatt.GATTToolBackend().scan(1)
         for x in result:
