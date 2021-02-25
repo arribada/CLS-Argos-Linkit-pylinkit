@@ -37,6 +37,13 @@ class OTAFW():
                 self._device.char_write(OTA_BASE_ADDR_CHAR_UUID, struct.pack('<I', ACTION_ABORT))
                 return
         self._device.char_write(OTA_BASE_ADDR_CHAR_UUID, struct.pack('<I', ACTION_DONE))
+        is_set = self._event.wait(timeout)
+        if is_set is False:
+            raise Exception('Time out waiting for STATUS handshake')
+        if (self._status == 0):
+            print('Image transfer ACK')
+        else:
+            print('Image transfer NACK')
 
     def _status_handler(self, _, data):
         self._status = int(data[0])

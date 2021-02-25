@@ -59,15 +59,6 @@ def main():
         cfg.read_string(args.write.read())
         dev.set(cfg[args.device])
 
-    if args.rstvw:
-        dev.rstvw()
-    
-    if args.rstbw:
-        dev.rstbw()
-
-    if args.factw:
-        dev.factw()
-    
     if args.dump_sensor:
         args.dump_sensor.write(dev.dumpd('sensor'))
         args.dump_sensor.close()
@@ -79,6 +70,15 @@ def main():
     if args.fw:
         dev.firmware_update(args.fw.read(), 0)
 
+    if args.rstvw:
+        dev.rstvw()
+    
+    if args.rstbw:
+        dev.rstbw()
+
+    if args.factw:
+        dev.factw()
+    
     if args.scan:
         result = pygatt.GATTToolBackend().scan(1)
         for x in result:
