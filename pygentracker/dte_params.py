@@ -3,7 +3,7 @@ from .dte_types import *     # noqa
 class DTEParamMap():
     param_map = [
     [ "ARGOS_DECID", "IDT06", UINT, 0, 0xFFFFFF, [], True ],
-    [ "ARGOS_HEXID", "IDT07", HEXADECIMAL, 0, 0xFFFFFF, [], True ],
+    [ "ARGOS_HEXID", "IDT07", TEXT, 0, 0xFFFFFF, [], True ],
     [ "DEVICE_MODEL", "IDT02", TEXT, "", "", [], True ],
     [ "FW_APP_VERSION", "IDT03", TEXT, "", "", [], True ],
     [ "LAST_TX", "ART01", DATESTRING, 0, 0, [], True ],
@@ -18,7 +18,7 @@ class DTEParamMap():
     [ "TR_NOM", "ARP05", UINT, 45, 1200, [], True ],
     [ "ARGOS_MODE", "ARP01", ARGOSMODE, 0, 0, [ 0, 1, 2, 3 ], True ],
     [ "NTRY_PER_MESSAGE", "ARP19", UINT, 0, 86400, [], True ],
-    [ "DUTY_CYCLE", "ARP18", UINT, 0, 0xFFFFFF, [], True ],
+    [ "DUTY_CYCLE", "ARP18", ARGOSDUTYCYLE, 0, 0xFFFFFF, [], True ],
     [ "GNSS_EN", "GNP01", BOOLEAN, 0, 0, [], True ],
     [ "DLOC_ARG_NOM", "ARP11", AQPERIOD, 0, 0, [ 1, 2, 3, 4, 5, 6, 7, 8 ], True ],
     [ "ARGOS_DEPTH_PILE", "ARP16", DEPTHPILE, 0, 0, [1, 2, 3, 4, 8, 9, 10, 11, 12], True ],
@@ -36,7 +36,7 @@ class DTEParamMap():
     [ "LB_ARGOS_POWER", "LBP03", ARGOSPOWER, 0, 0, [ 0, 1, 2, 3 ], True ],
     [ "TR_LB", "ARP06", UINT, 45, 1200, [], True ],
     [ "LB_ARGOS_MODE", "LBP04", ARGOSMODE, 0, 0, [ 0, 1, 2, 3 ], True ],
-    [ "LB_ARGOS_DUTY_CYCLE", "LBP05", UINT, 0, 0xFFFFFF, [], True ],
+    [ "LB_ARGOS_DUTY_CYCLE", "LBP05", ARGOSDUTYCYLE, 0, 0xFFFFFF, [], True ],
     [ "LB_GNSS_EN", "LBP06", BOOLEAN, 0, 0, [], True ],
     [ "DLOC_ARG_LB", "ARP12", AQPERIOD, 0, 0, [ 1, 2, 3, 4, 5, 6, 7, 8 ], True ],
     [ "LB_GNSS_HDOPFILT_THR", "LBP07", UINT, 2, 15, [], True ],

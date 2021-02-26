@@ -35,8 +35,14 @@ class TEXT():
         return value
 
 
-class HEXADECIMAL(TEXT):
-    pass
+class ARGOSDUTYCYLE():
+    @staticmethod
+    def encode(value):
+        return str(int(value, 16))
+
+    @staticmethod
+    def decode(value):
+        return '{:6X}'.format(int(value))
 
 
 class DATESTRING():
