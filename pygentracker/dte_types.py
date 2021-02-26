@@ -194,7 +194,7 @@ class ZONE():
     @staticmethod
     def decode_arg_loc_argos(x):
         options = [-1, 7 * 60, 15 * 60, 30 * 60, 1 * 60 * 60, 2 * 60 * 60, 3 * 60 * 60, \
-                    4 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60]
+                    4 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60, -1, -1, -1, -1, 0]
         return options[x]
 
     @staticmethod
@@ -214,7 +214,7 @@ class ZONE():
     @staticmethod
     def encode_arg_loc_argos(x):
         options = [-1, 7 * 60, 15 * 60, 30 * 60, 1 * 60 * 60, 2 * 60 * 60, 3 * 60 * 60, \
-                    4 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60]
+                    4 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60, -1, -1, -1, -1, 0]
         return options.index(int(x))
 
     @staticmethod
