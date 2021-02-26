@@ -1,9 +1,8 @@
 from .dte_nus import DTENUS
 from .dte_params import DTEParamMap
-from .dte_types import BASE64
+from .dte_types import BASE64, ZONE, PASPW
 import re
 import logging
-import binascii
 
 
 logger = logging.getLogger(__name__)
@@ -68,12 +67,24 @@ class DTE():
             raw_data += BASE64.decode(data)
         return raw_data
 
+    def paspw(self, json_file_data):
+        resp = self._nus.send(self._encode_command('PASPW', args=[PASPW.encode(json_file_data)]))
+        self._decode_response(resp)
+
+    def zonew(self, zone_dict):
+        resp = self._nus.send(self._encode_command('ZONEW', args=[ZONE.encode(zone_dict)]))
+        self._decode_response(resp)
+    
+    def zoner(self, zone_id):
+        resp = self._nus.send(self._encode_command('ZONER', args=[str(zone_id)]))
+        return ZONE.decode(self._decode_response(resp))
+
     def factw(self):
         resp = self._nus.send(self._encode_command('FACTW'))
         self._decode_response(resp)
     
-    def rstvw(self):
-        resp = self._nus.send(self._encode_command('RSTVW', args=['1']))
+    def rstvw(self, var_id=1):
+        resp = self._nus.send(self._encode_command('RSTVW', args=[str(var_id)]))
         self._decode_response(resp)
     
     def rstbw(self):

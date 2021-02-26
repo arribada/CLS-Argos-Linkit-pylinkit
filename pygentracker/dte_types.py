@@ -73,7 +73,7 @@ class ARGOSFREQ():
 
 
 class ARGOSPOWER():
-    allowed = [-1, 3, 4, 20, 500]
+    allowed = [-1, 3, 4, 200, 500]
 
     @staticmethod
     def encode(value):
@@ -118,3 +118,237 @@ class AQPERIOD():
     @staticmethod
     def decode(value):
         return AQPERIOD.allowed[int(value)]
+
+
+
+class dotdict(dict):
+    """dot.notation access to dictionary attributes"""
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+
+class Packer():
+
+    def __init__(self, data):
+        self._data = [int(x) for x in data]
+        self._pack_pos = 0
+        self._unpack_pos = 0
+
+    def result(self):
+        return bytearray(self._data)
+
+    def extract_bits(self, total_bits):
+        result = 0
+        start = self._unpack_pos
+        num_bits = total_bits
+        in_byte_offset = int(start / 8)
+        in_bit_offset = start % 8
+        out_bit_offset = 0
+        n_bits = min(8 - in_bit_offset, num_bits)
+    
+        while (num_bits):
+            mask = 0xFF >> (8 - n_bits)
+            result |= (((self._data[in_byte_offset] >> (8-in_bit_offset-n_bits)) & mask) << (total_bits - out_bit_offset - n_bits))
+            out_bit_offset = out_bit_offset + n_bits
+            in_bit_offset = in_bit_offset + n_bits    
+            if (in_bit_offset >= 8):
+                in_byte_offset += 1
+                in_bit_offset %= 8    
+            num_bits -= n_bits
+            n_bits = min(8 - in_bit_offset, num_bits)
+        self._unpack_pos += total_bits
+        return result
+
+    def pack_bits(self, value, total_bits):
+        start = self._unpack_pos
+        num_bits = total_bits
+        out_byte_offset = int(start / 8)
+        out_bit_offset = start % 8
+        in_bit_offset = 0
+        n_bits = min(8 - out_bit_offset, num_bits)
+  
+        while (num_bits):
+            mask = (0xFFFFFFFF >> (total_bits - in_bit_offset - n_bits)) if ((total_bits - in_bit_offset) == 32) else (((1 << (total_bits - in_bit_offset))-1) >> (total_bits - in_bit_offset - n_bits))
+            self._data[out_byte_offset] |= (((value >> (total_bits - in_bit_offset - n_bits)) & mask) << (8-out_bit_offset-n_bits))
+            out_bit_offset = out_bit_offset + n_bits
+            in_bit_offset = in_bit_offset + n_bits
+    
+            if (out_bit_offset >= 8):
+                out_byte_offset += 1
+                out_bit_offset = out_bit_offset % 8
+            num_bits -= n_bits
+            n_bits = min(8 - out_bit_offset, num_bits)
+
+        self._unpack_pos += total_bits
+
+
+class ZONE():
+
+    @staticmethod
+    def decode_arg_loc_argos(x):
+        options = [-1, 7 * 60, 15 * 60, 30 * 60, 1 * 60 * 60, 2 * 60 * 60, 3 * 60 * 60, \
+                    4 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60]
+        return options[x]
+
+    @staticmethod
+    def decode_comms_vector(x):
+        options = ['UNCHANGED', 'ARGOS_PREFERRED', 'CELLULAR_PREFERRED']
+        return options[x]
+
+    @staticmethod
+    def encode_comms_vector(x):
+        options = ['UNCHANGED', 'ARGOS_PREFERRED', 'CELLULAR_PREFERRED']
+        return options.index(x)
+
+    @staticmethod
+    def encode_depth_pile(x):
+        return DEPTHPILE.encode(x)
+
+    @staticmethod
+    def encode_arg_loc_argos(x):
+        options = [-1, 7 * 60, 15 * 60, 30 * 60, 1 * 60 * 60, 2 * 60 * 60, 3 * 60 * 60, \
+                    4 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60]
+        return options.index(int(x))
+
+    @staticmethod
+    def encode_zone_type(x):
+        options = [-1, 'CIRCLE']
+        return options.index(x)
+
+    @staticmethod
+    def decode_zone_type(x):
+        options = [-1, 'CIRCLE']
+        return options[int(x)]
+
+    @staticmethod
+    def convert_longitude_to_decimal(longitude):
+        d = 0
+        longitude = int(longitude)
+        if (longitude < (360*1E4)): # E
+            d = longitude * 5*1E-5
+        else:  # W
+            d = ((longitude - (360*1E4)) * -5*1E-5)
+
+        return d
+
+    @staticmethod
+    def convert_decimal_to_longitude(longitude):
+        longitude = float(longitude)
+        l = 0
+        if (longitude > 0):# E
+            l = int(2*1E4 * longitude)
+        else: # W
+            l = int((-2*1E4 * longitude) + (360*1E4))
+        return l
+
+    @staticmethod
+    def convert_latitude_to_decimal(latitude):
+        d = 0
+        latitude = int(latitude)
+        if (latitude < (180*1E4)): # S
+            d = latitude * (-5 * 1E-5)
+        else: # N
+            d = (latitude - (180*1E4)) * (5 * 1E-5)
+        return d
+
+    @staticmethod
+    def convert_decimal_to_latitude(latitude):
+        l = 0
+        latitude = float(latitude)
+        if (latitude < 0): # S
+            l = int(-2E4 * latitude)
+        else:
+            l = int((2E4 * latitude) + (180*1E4))
+        return l
+
+    @staticmethod
+    def decode(b64_data):
+
+        zone = dotdict({})
+        packer = Packer(base64.b64decode(b64_data))
+
+        zone.zone_id = packer.extract_bits(7)
+        zone.zone_type = ZONE.decode_zone_type(packer.extract_bits(1))
+        zone.enable_monitoring = packer.extract_bits(1)
+        zone.enable_entering_leaving_events = packer.extract_bits(1)
+        zone.enable_out_of_zone_detection_mode = packer.extract_bits(1)
+        zone.enable_activation_date = packer.extract_bits(1)
+        zone.year = packer.extract_bits(5)
+        zone.year += 2020
+        zone.month = packer.extract_bits(4)
+        zone.day = packer.extract_bits(5)
+        zone.hour = packer.extract_bits(5)
+        zone.minute = packer.extract_bits(6)
+        comms_vector = packer.extract_bits(2)
+        zone.comms_vector = ZONE.decode_comms_vector(comms_vector)
+        zone.delta_arg_loc_argos_seconds = packer.extract_bits(4)
+        zone.delta_arg_loc_argos_seconds = ZONE.decode_arg_loc_argos(zone.delta_arg_loc_argos_seconds)
+        zone.delta_arg_loc_cellular_seconds = packer.extract_bits(7)  # Not used
+        zone.argos_extra_flags_enable = packer.extract_bits(1)
+        argos_depth_pile = packer.extract_bits(4)
+        zone.argos_depth_pile = DEPTHPILE.decode(argos_depth_pile)
+        zone.argos_power = ARGOSPOWER.decode(packer.extract_bits(2)+1)
+        zone.argos_time_repetition_seconds = packer.extract_bits(7)
+        zone.argos_time_repetition_seconds *= 10
+        zone.argos_mode = ARGOSMODE.decode(packer.extract_bits(2))
+        zone.argos_duty_cycle = '{:06X}'.format(packer.extract_bits(24))
+        zone.gnss_extra_flags_enable = packer.extract_bits(1)
+        zone.hdop_filter_threshold = packer.extract_bits(4)
+        zone.gnss_acquisition_timeout_seconds = packer.extract_bits(8)
+        center_longitude_x = packer.extract_bits(23)
+        zone.center_longitude_x = ZONE.convert_longitude_to_decimal(center_longitude_x)
+        center_latitude_y = packer.extract_bits(22)
+        zone.center_latitude_y = ZONE.convert_latitude_to_decimal(center_latitude_y)
+        zone.radius_m = packer.extract_bits(12) * 50
+        return zone
+
+    @staticmethod
+    def encode(zone_dict):
+
+        zone = dotdict(zone_dict)
+
+        # Zero out the data buffer to the required number of bytes -- this will round up to
+        # the nearest number of bytes and zero all bytes before encoding
+        total_bits = 160
+        packer = Packer(bytearray([0] * int((total_bits + 4) / 8)))
+
+        packer.pack_bits(int(zone.zone_id), 7)
+        packer.pack_bits(ZONE.encode_zone_type(zone.zone_type), 1)
+        packer.pack_bits(int(zone.enable_monitoring), 1)
+        packer.pack_bits(int(zone.enable_entering_leaving_events), 1)
+        packer.pack_bits(int(zone.enable_out_of_zone_detection_mode), 1)
+        packer.pack_bits(int(zone.enable_activation_date), 1)
+        packer.pack_bits((int(zone.year) - 2020), 5)
+        packer.pack_bits(int(zone.month), 4)
+        packer.pack_bits(int(zone.day), 5)
+        packer.pack_bits(int(zone.hour), 5)
+        packer.pack_bits(int(zone.minute), 6)
+        packer.pack_bits(ZONE.encode_comms_vector(zone.comms_vector), 2)
+        delta_arg_loc_argos_seconds = ZONE.encode_arg_loc_argos(int(zone.delta_arg_loc_argos_seconds))
+        packer.pack_bits(delta_arg_loc_argos_seconds, 4)
+        packer.pack_bits(0, 7) # zone.delta_arg_loc_cellular_seconds not used!
+        packer.pack_bits(int(zone.argos_extra_flags_enable), 1)
+        argos_depth_pile = int(DEPTHPILE.encode(zone.argos_depth_pile))
+        packer.pack_bits(argos_depth_pile, 4)
+        packer.pack_bits(int(ARGOSPOWER.encode(zone.argos_power))-1, 2)
+        packer.pack_bits(int(int(zone.argos_time_repetition_seconds) / 10), 7)
+        packer.pack_bits(int(ARGOSMODE.encode(zone.argos_mode)), 2)
+        packer.pack_bits(int(zone.argos_duty_cycle, 16), 24)
+        packer.pack_bits(int(zone.gnss_extra_flags_enable), 1)
+        packer.pack_bits(int(zone.hdop_filter_threshold), 4)
+        packer.pack_bits(int(zone.gnss_acquisition_timeout_seconds), 8)
+        center_longitude_x = ZONE.convert_decimal_to_longitude(zone.center_longitude_x)
+        packer.pack_bits(center_longitude_x, 23)
+        center_latitude_y = ZONE.convert_decimal_to_latitude(zone.center_latitude_y)
+        packer.pack_bits(center_latitude_y, 22)
+        packer.pack_bits(int(int(zone.radius_m) / 50), 12)
+
+        return base64.b64encode(packer.result()).decode('ascii')
+
+
+class PASPW():
+
+    @staticmethod
+    def encode(value):
+        raise Exception('Not implemented')

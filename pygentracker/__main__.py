@@ -9,11 +9,14 @@ import pygatt   # noqa
 parser = argparse.ArgumentParser()
 parser.add_argument('--fw', type=argparse.FileType('rb'), required=False, help='Firmware filename for FW OTA update')
 parser.add_argument('--device', type=str, required=False, help='xx:xx:xx:xx:xx:xx BLE device address')
-parser.add_argument('--read', type=argparse.FileType('w'), required=False, help='Filename to read device configuration to')
+parser.add_argument('--parmr', type=argparse.FileType('w'), required=False, help='Filename to write [PARAM] configuration to')
 parser.add_argument('--rstvw', action='store_true', required=False, help='Reset variables (TX_COUNTER)')
 parser.add_argument('--rstbw', action='store_true', required=False, help='Reset beacon')
-parser.add_argument('--factw', action='store_true', required=False, help='Factory reset')
-parser.add_argument('--write', type=argparse.FileType('r'), required=False, help='Filename to write device configuration from')
+parser.add_argument('--factw', action='store_true', required=False, help='Factory reset (WARNING: erases all stored logs and configuration!)')
+parser.add_argument('--parmw', type=argparse.FileType('r'), required=False, help='Filename to read [PARAM] configuration from')
+parser.add_argument('--zonew', type=argparse.FileType('r'), required=False, help='Filename to read [ZONE] configuration from')
+parser.add_argument('--zoner', type=argparse.FileType('w'), required=False, help='Filename to write [ZONE] configuration to')
+parser.add_argument('--paspw', type=argparse.FileType('r'), required=False, help='Filename (JSON) to read pass predict configuration from')
 parser.add_argument('--scan', action='store_true', required=False, help='Scan for beacons')
 parser.add_argument('--dump_sensor', type=argparse.FileType('wb'), required=False, help='Dump sensor log file')
 parser.add_argument('--dump_system', type=argparse.FileType('wb'), required=False, help='Dump system log file')
@@ -34,7 +37,7 @@ def setup_logging(enabled, level):
 
 
 def main():
-    #setup_logging(True, 'debug')
+    setup_logging(True, 'debug')
     if not any(vars(args).values()):
         parser.print_help()
         sys.exit(2)
@@ -43,21 +46,39 @@ def main():
     if args.device:
         dev = pygentracker.GenTracker(args.device)
 
-    if args.read:
+    if args.parmr:
         dev.sync()
         d = {}
-        d[args.device] = dev.get()
+        d['PARAM'] = dev.get()
         cfg = configparser.ConfigParser()
         cfg.optionxform = lambda option: option
         cfg.read_dict(dictionary=d)
-        cfg.write(args.read)
-        args.read.close()
+        cfg.write(args.parmr)
+        args.parmr.close()
 
-    if args.write:
+    if args.parmw:
         cfg = configparser.ConfigParser()
         cfg.optionxform = lambda option: option
-        cfg.read_string(args.write.read())
-        dev.set(cfg[args.device])
+        cfg.read_string(args.parmw.read())
+        dev.set(cfg['PARAM'])
+
+    if args.zoner:
+        d = {}
+        d['ZONE'] = dev.zoner()
+        cfg = configparser.ConfigParser()
+        cfg.optionxform = lambda option: option
+        cfg.read_dict(dictionary=d)
+        cfg.write(args.zoner)
+        args.zoner.close()
+
+    if args.zonew:
+        cfg = configparser.ConfigParser()
+        cfg.optionxform = lambda option: option
+        cfg.read_string(args.zonew.read())
+        dev.zonew(cfg['ZONE'])
+
+    if args.paspw:
+        dev.paspw(args.paspw.read())
 
     if args.dump_sensor:
         args.dump_sensor.write(dev.dumpd('sensor'))

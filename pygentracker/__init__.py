@@ -30,6 +30,15 @@ class GenTracker():
     def firmware_update(self, data, file_id=0):
         self._otafw.send_update_file(file_id, data)
 
+    def paspw(self, json_file_data):
+        self._dte.paspw(json_file_data)
+    
+    def zonew(self, zone_dict):
+        self._dte.zonew(zone_dict)
+
+    def zoner(self, zone_id=1):
+        return self._dte.zoner(zone_id)
+
     def dumpd(self, log_type):
         return self._dte.dumpd(log_type)
 

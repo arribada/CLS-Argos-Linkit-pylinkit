@@ -12,19 +12,19 @@ pygentracker --scan
 
 To read configuration parameters into a file:
 
-pygentracker --device xx:xx:xx:xx:xx:xx --read params.txt
+pygentracker --device xx:xx:xx:xx:xx:xx --parmr params.txt
 
 To write configuration parameters from a file:
 
-pygentracker --device xx:xx:xx:xx:xx:xx --write params.txt
+pygentracker --device xx:xx:xx:xx:xx:xx --parmw params.txt
+
 
 Configuration file format
 =========================
 
-Configuration files are organised in sections according to the bluetooth
-device ID e.g.,
+Configuration files are organised in sections accordingly:
 
-[CE:BD:65:D5:4F:D2]
+[PARAM]  # Optional params for --parmw command
 PROFILE_NAME = LIAM
 ARGOS_FREQ = 401.6599
 ARGOS_POWER = 500
@@ -38,6 +38,7 @@ ARGOS_DEPTH_PILE = 1
 GNSS_ACQ_TIMEOUT = 60
 ARGOS_HEXID = 4E7B54C
 
-A configuration file can have multiple configuration sections for different
-devices as required.  The tool will only pull out the configuration matching
-the device ID of the device it connects with when performing updates.
+[ZONE]   # Optional zone info for --zonew command
+<Zone data>
+
+A configuration file can have multiple configuration sections.
