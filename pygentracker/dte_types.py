@@ -42,7 +42,7 @@ class ARGOSDUTYCYLE():
 
     @staticmethod
     def decode(value):
-        return '{:6X}'.format(int(value))
+        return '{:06X}'.format(int(value))
 
 
 class DATESTRING():
