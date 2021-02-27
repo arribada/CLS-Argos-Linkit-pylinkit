@@ -15,6 +15,7 @@ class DTENUS():
     def __init__(self, device):
         self._device = device
         self._event = Event()
+        self._queued_data = ''
         device.subscribe(NUS_TX_CHAR_UUID, self._data_handler)
 
     def send(self, data, timeout=5.0, multi_response=False):
