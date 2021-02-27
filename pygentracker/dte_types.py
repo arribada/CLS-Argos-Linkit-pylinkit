@@ -1,4 +1,6 @@
 import base64
+import json
+import binascii
 
 
 class BOOLEAN():
@@ -357,4 +359,12 @@ class PASPW():
 
     @staticmethod
     def encode(value):
-        raise Exception('Not implemented')
+        d = json.loads(value)
+        allcast = d['allcastFormats']
+        hex_bytes = ''    
+        for entry in allcast:
+            for x in entry['adaptedOrbitParametersBurst']:
+                hex_bytes += entry['adaptedOrbitParametersBurst'][x]
+            for x in entry['constellationStatusBurst']:
+                hex_bytes += entry['constellationStatusBurst'][x]
+        return base64.b64encode(binascii.unhexlify(hex_bytes)).decode('ascii')
