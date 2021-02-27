@@ -19,7 +19,10 @@ setup(
     ],
     packages=find_packages(),
     python_requires='>=3.0',
-    install_requires=['pygatt[GATTTOOL]'],
+    install_requires=[
+        'service_identity',
+        'bleak'
+    ],
     extras_require={},
     entry_points={
         'console_scripts': [

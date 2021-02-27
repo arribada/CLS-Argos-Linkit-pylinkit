@@ -1,14 +1,11 @@
-import pygatt    # noqa
+from .ble import BLEDevice
 from .dte import DTE
 from .ota_fw import OTAFW
 
-
 class GenTracker():
     def __init__(self, address):
-        self._backend = pygatt.GATTToolBackend()
-        self._backend.start()
-        self._backend.reset()
-        self._device = self._backend.connect(address, address_type=pygatt.BLEAddressType.random)
+        self._device = BLEDevice()
+        self._device.connect(address, 5)
         self._dte = DTE(self._device)
         self._otafw = OTAFW(self._device)
         self._map = {}

@@ -1,4 +1,3 @@
-import pygatt  # noqa
 import logging
 from threading import Event
 
