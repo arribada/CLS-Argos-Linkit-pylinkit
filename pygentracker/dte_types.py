@@ -1,6 +1,9 @@
 import base64
 import json
 import binascii
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class BOOLEAN():
@@ -367,4 +370,5 @@ class PASPW():
                 hex_bytes += entry['adaptedOrbitParametersBurst'][x]
             for x in entry['constellationStatusBurst']:
                 hex_bytes += entry['constellationStatusBurst'][x]
+        logger.debug('Allcast packet: %s', hex_bytes)
         return base64.b64encode(binascii.unhexlify(hex_bytes)).decode('ascii')

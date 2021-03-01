@@ -59,7 +59,7 @@ class DTE():
 
     def dumpd(self, log_type='sensor'):
         log_d = ['system', 'sensor']
-        resp = self._nus.send(self._encode_command('DUMPD', args=['{log_d}'.format(log_d=log_d.index(log_type))]), timeout=1.0, multi_response=True)
+        resp = self._nus.send(self._encode_command('DUMPD', args=['{log_d}'.format(log_d=log_d.index(log_type))]), timeout=5.0, multi_response=True)
         responses = self._decode_multi_response(resp)
         raw_data = b''
         for r in responses:

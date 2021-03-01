@@ -18,6 +18,7 @@ parser.add_argument('--zonew', type=argparse.FileType('r'), required=False, help
 parser.add_argument('--zoner', type=argparse.FileType('w'), required=False, help='Filename to write [ZONE] configuration to')
 parser.add_argument('--paspw', type=argparse.FileType('r'), required=False, help='Filename (JSON) to read pass predict configuration from')
 parser.add_argument('--scan', action='store_true', required=False, help='Scan for beacons')
+parser.add_argument('--debug', action='store_true', required=False, help='Turn on debug trace')
 parser.add_argument('--dump_sensor', type=argparse.FileType('wb'), required=False, help='Dump sensor log file')
 parser.add_argument('--dump_system', type=argparse.FileType('wb'), required=False, help='Dump system log file')
 args = parser.parse_args()
@@ -37,10 +38,12 @@ def setup_logging(enabled, level):
 
 
 def main():
-    setup_logging(True, 'debug')
     if not any(vars(args).values()):
         parser.print_help()
         sys.exit(2)
+
+    if args.debug:
+        setup_logging(True, 'debug')
 
     dev = None
     if args.device:

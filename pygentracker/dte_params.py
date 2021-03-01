@@ -13,7 +13,7 @@ class DTEParamMap():
     [ "PROFILE_NAME", "IDP11", TEXT, "", "", [], True ],
     [ "AOP_STATUS", "XXXXX", BASE64, 0, 0, [], False ],  # FIXME: missing parameter key
     [ "ARGOS_AOP_DATE", "ART03", DATESTRING, 0, 0, [], True ],
-    [ "ARGOS_FREQ", "ARP03", ARGOSFREQ, 401.6599, 401.6800, [], True ],
+    [ "ARGOS_FREQ", "ARP03", ARGOSFREQ, 401.6200, 401.6800, [], True ],
     [ "ARGOS_POWER", "ARP04", ARGOSPOWER, 0, 0, [ 0, 1, 2, 3 ], True ],
     [ "TR_NOM", "ARP05", UINT, 45, 1200, [], True ],
     [ "ARGOS_MODE", "ARP01", ARGOSMODE, 0, 0, [ 0, 1, 2, 3 ], True ],
