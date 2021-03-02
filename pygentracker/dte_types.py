@@ -2,6 +2,8 @@ import base64
 import json
 import binascii
 import logging
+import struct
+
 
 logger = logging.getLogger(__name__)
 
@@ -372,3 +374,46 @@ class PASPW():
                 hex_bytes += entry['constellationStatusBurst'][x]
         logger.debug('Allcast packet: %s', hex_bytes)
         return base64.b64encode(binascii.unhexlify(hex_bytes)).decode('ascii')
+
+
+class LOGRECORD(dotdict):
+    pass
+
+
+class LOGFILE():
+    LOG_TYPES = ['LOG_GPS',
+                 'LOG_STARTUP',
+                 'LOG_ARTIC',
+                 'LOG_UNDERWATER',
+                 'LOG_BATTERY',
+                 'LOG_STATE',
+                 'LOG_ZONE',
+                 'LOG_OTA_UPDATE',
+                 'LOG_BLE',
+                 'LOG_ERROR',
+                 'LOG_WARN',
+                 'LOG_INFO',
+                 'LOG_TRACE']
+
+    @staticmethod
+    def decode_log_gps(payload, r):
+        r.batt_voltage, r.iTOW, r.fix_year, r.fix_month, r.fix_day, r.fix_hour, r.fix_min, r.fix_sec, r.valid, r.tAcc, r.nano, r.fixType, _, _, _, r.numSV, \
+        r.lon, r.lat, r.height, r.hMSL, r.hAcc, r.vAcc, r.velN, r.velE, r.velD, r.gSpeed, r.headMot, \
+        r.sAcc, r.headAcc, r.pDOP, r.vDOP, r.hDOP, r.headVeh = \
+            struct.unpack('<2xHIHBBBBBBIiBBBBB3xddiiIIiiiifIfffff', payload[:108])
+        return r
+
+    @staticmethod
+    def decode(data):
+        records = []
+        while data:
+            r = LOGRECORD()
+            r.day, r.month, r.year, r.hours, r.mins, r.secs, r.log_t, payload = struct.unpack('<BBHBBBB120s', data[:128])
+            r.log_t = LOGFILE.LOG_TYPES[r.log_t]
+            if (r.log_t == 'LOG_GPS'):
+                LOGFILE.decode_log_gps(payload, r)
+            else:
+                r.message = payload.decode('utf-8', errors='ignore').split('\x00')[0]
+            records.append(r)
+            data = data[128:]
+        return records

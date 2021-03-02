@@ -1,4 +1,5 @@
 import pygatt    # noqa
+import json
 from .dte import DTE
 from .ota_fw import OTAFW
 
@@ -40,7 +41,7 @@ class GenTracker():
         return self._dte.zoner(zone_id)
 
     def dumpd(self, log_type):
-        return self._dte.dumpd(log_type)
+        return json.dumps(self._dte.dumpd(log_type), sort_keys=True, indent=4).encode('ascii')
 
     def factw(self):
         self._dte.factw()

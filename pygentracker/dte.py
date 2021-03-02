@@ -1,6 +1,6 @@
 from .dte_nus import DTENUS
 from .dte_params import DTEParamMap
-from .dte_types import BASE64, ZONE, PASPW
+from .dte_types import BASE64, ZONE, PASPW, LOGFILE
 import re
 import logging
 
@@ -65,7 +65,7 @@ class DTE():
         for r in responses:
             _, _, data = r.split(',')
             raw_data += BASE64.decode(data)
-        return raw_data
+        return LOGFILE.decode(raw_data)
 
     def paspw(self, json_file_data):
         resp = self._nus.send(self._encode_command('PASPW', args=[PASPW.encode(json_file_data)]))
