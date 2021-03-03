@@ -1,4 +1,3 @@
-import pygatt   # noqa
 import struct
 from threading import Event
 

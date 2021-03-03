@@ -3,7 +3,7 @@ import argparse
 import configparser
 import sys
 import pygentracker
-import pygatt   # noqa
+from .ble import BLEDevice
 
 
 parser = argparse.ArgumentParser()
@@ -104,10 +104,11 @@ def main():
         dev.rstbw()
 
     if args.scan:
-        result = pygatt.GATTToolBackend().scan(1)
+        scan_dev = BLEDevice()
+        result = scan_dev.scan()
         for x in result:
-            if (x['name'] == 'GenTracker'):
-                print(x['address'])
+            if (x.name == 'GenTracker'):
+                print(x.address)
 
 
 if __name__ == "__main__":
