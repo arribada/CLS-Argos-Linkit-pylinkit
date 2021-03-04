@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pygentracker',
-    version='0.1.0',
+    version='0.2.0',
     description='Python GenTracker BLE configuration tool',
     author='Liam Wickins',
     author_email='liam@icoteq.com',
@@ -21,6 +21,7 @@ setup(
     python_requires='>=3.0',
     install_requires=[
         'service_identity',
+        'pyasn1',
         'bleak'
     ],
     extras_require={},
