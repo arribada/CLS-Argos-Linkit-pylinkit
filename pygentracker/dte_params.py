@@ -42,7 +42,13 @@ class DTEParamMap():
     [ "LB_GNSS_HDOPFILT_THR", "LBP07", UINT, 2, 15, [], True ],
     [ "LB_ARGOS_DEPTH_PILE", "LBP08", DEPTHPILE, 0, 0, [1, 2, 3, 4, 8, 9, 10, 11, 12], True ],
     [ "LB_GNSS_ACQ_TIMEOUT", "LBP09", UINT, 10, 60, [], True ],
-    [ "SAMPLING_SURF_FREQ", "UNP04", UINT, 1, 1440, [], True ]
+    [ "SAMPLING_SURF_FREQ", "UNP04", UINT, 1, 1440, [], True ],
+    [ "PP_MIN_ELEVATION", "PPP01", FLOAT, 0.0, 90.0, [], True ],
+    [ "PP_MAX_ELEVATION", "PPP02", FLOAT, 0.0, 90.0, [], True ],
+    [ "PP_MIN_DURATION", "PPP03", UINT, 20, 3600, [], True ],
+    [ "PP_MAX_PASSES", "PPP04", UINT, 1, 10000, [], True ],
+    [ "PP_LINEAR_MARGIN", "PPP05", UINT, 1, 3600, [], True ],
+    [ "PP_COMP_STEP", "PPP06", UINT, 1, 1000, [], True ],
     ]
 
     @staticmethod
@@ -50,21 +56,25 @@ class DTEParamMap():
         for (param, key, cls, minimum, maximum, allowed, is_implemented) in DTEParamMap.param_map:
             if p == param:
                 return key
+        raise Exception('Param {} not found'.format(param))
 
     @staticmethod
     def key_to_param(k):
         for (param, key, cls, minimum, maximum, allowed, is_implemented) in DTEParamMap.param_map:
             if k == key:
                 return param
+        raise Exception('Key {} not found'.format(key))
 
     @staticmethod
     def decode(k, v):
         for (param, key, cls, minimum, maximum, allowed, is_implemented) in DTEParamMap.param_map:
             if k == key:
                 return cls.decode(v)
+        raise Exception('Key {} not found'.format(key))
 
     @staticmethod
     def encode(p, v):
         for (param, key, cls, minimum, maximum, allowed, is_implemented) in DTEParamMap.param_map:
             if p == param:
                 return cls.encode(v)
+        raise Exception('Param {} not found'.format(param))

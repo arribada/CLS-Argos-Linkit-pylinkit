@@ -28,6 +28,16 @@ class UINT():
         return int(value)
 
 
+class FLOAT():
+    @staticmethod
+    def encode(value):
+        return str(float(value))
+
+    @staticmethod
+    def decode(value):
+        return float(value)
+
+
 class DECIMAL(UINT):
     pass
 
@@ -159,15 +169,15 @@ class Packer():
         in_bit_offset = start % 8
         out_bit_offset = 0
         n_bits = min(8 - in_bit_offset, num_bits)
-    
+
         while (num_bits):
             mask = 0xFF >> (8 - n_bits)
             result |= (((self._data[in_byte_offset] >> (8-in_bit_offset-n_bits)) & mask) << (total_bits - out_bit_offset - n_bits))
             out_bit_offset = out_bit_offset + n_bits
-            in_bit_offset = in_bit_offset + n_bits    
+            in_bit_offset = in_bit_offset + n_bits
             if (in_bit_offset >= 8):
                 in_byte_offset += 1
-                in_bit_offset %= 8    
+                in_bit_offset %= 8
             num_bits -= n_bits
             n_bits = min(8 - in_bit_offset, num_bits)
         self._unpack_pos += total_bits
@@ -180,13 +190,13 @@ class Packer():
         out_bit_offset = start % 8
         in_bit_offset = 0
         n_bits = min(8 - out_bit_offset, num_bits)
-  
+
         while (num_bits):
             mask = (0xFFFFFFFF >> (total_bits - in_bit_offset - n_bits)) if ((total_bits - in_bit_offset) == 32) else (((1 << (total_bits - in_bit_offset))-1) >> (total_bits - in_bit_offset - n_bits))
             self._data[out_byte_offset] |= (((value >> (total_bits - in_bit_offset - n_bits)) & mask) << (8-out_bit_offset-n_bits))
             out_bit_offset = out_bit_offset + n_bits
             in_bit_offset = in_bit_offset + n_bits
-    
+
             if (out_bit_offset >= 8):
                 out_byte_offset += 1
                 out_bit_offset = out_bit_offset % 8
@@ -366,7 +376,7 @@ class PASPW():
     def encode(value):
         d = json.loads(value)
         allcast = d['allcastFormats']
-        hex_bytes = ''    
+        hex_bytes = ''
         for entry in allcast:
             for x in entry['adaptedOrbitParametersBurst']:
                 hex_bytes += entry['adaptedOrbitParametersBurst'][x]
