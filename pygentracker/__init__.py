@@ -1,4 +1,3 @@
-import json
 from .ble import BLEDevice
 from .dte import DTE
 from .ota_fw import OTAFW
@@ -30,7 +29,7 @@ class GenTracker():
 
     def paspw(self, json_file_data):
         self._dte.paspw(json_file_data)
-    
+
     def zonew(self, zone_dict):
         self._dte.zonew(zone_dict)
 
@@ -38,7 +37,7 @@ class GenTracker():
         return self._dte.zoner(zone_id)
 
     def dumpd(self, log_type):
-        return json.dumps(self._dte.dumpd(log_type), sort_keys=True, indent=4).encode('ascii')
+        return self._dte.dumpd(log_type)
 
     def factw(self):
         self._dte.factw()
