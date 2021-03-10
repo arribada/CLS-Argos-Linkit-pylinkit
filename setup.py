@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='pygentracker',
-    version='0.3.0',
-    description='Python GenTracker BLE configuration tool',
+    name='pylinkit',
+    version='0.4.0',
+    description='Python LinkIt BLE configuration tool',
     author='Liam Wickins',
     author_email='liam@icoteq.com',
 
@@ -27,7 +27,7 @@ setup(
     extras_require={},
     entry_points={
         'console_scripts': [
-            'pygentracker = pygentracker.__main__:main'
+            'pylinkit = pylinkit.__main__:main'
         ]
     },
 )

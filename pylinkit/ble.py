@@ -8,7 +8,7 @@ import atexit
 
 class BLEDevice(object):
 
-    _SCAN_INTERVAL = 0.25
+    _SCAN_INTERVAL = 2.0
 
     def __init__(self):
 

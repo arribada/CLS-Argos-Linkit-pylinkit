@@ -9,45 +9,45 @@ Usage
 
 To scan for beacons:
 
-pygentracker --scan
+pylinkit --scan
 
 To read configuration parameters into a file:
 
-pygentracker --device xx:xx:xx:xx:xx:xx --parmr params.txt
+pylinkit --device xx:xx:xx:xx:xx:xx --parmr params.txt
 
 To write configuration parameters from a file:
 
-pygentracker --device xx:xx:xx:xx:xx:xx --parmw params.txt
+pylinkit --device xx:xx:xx:xx:xx:xx --parmw params.txt
 
 To send pass prediction from a JSON file:
 
-pygentracker --device xx:xx:xx:xx:xx:xx --paspw paspw.json
+pylinkit --device xx:xx:xx:xx:xx:xx --paspw paspw.json
 
 To download sensor log data:
 
-pygentracker --device xx:xx:xx:xx:xx:xx --dump_sensor gpslog.json
+pylinkit --device xx:xx:xx:xx:xx:xx --dump_sensor gpslog.json [--format csv]
 
 To download system log data:
 
-pygentracker --device xx:xx:xx:xx:xx:xx --dump_system syslog.json
+pylinkit --device xx:xx:xx:xx:xx:xx --dump_system syslog.json [--format csv]
 
 To perform a factory reset (will erase stored configuration, paspw, zone and log files):
 
-pygentracker --device xx:xx:xx:xx:xx:xx --factw
+pylinkit --device xx:xx:xx:xx:xx:xx --factw
 
 To perform a software reset:
 
-pygentracker --device xx:xx:xx:xx:xx:xx --rstbw
+pylinkit --device xx:xx:xx:xx:xx:xx --rstbw
 
 To reset the TX_COUNTER to zero:
 
-pygentracker --device xx:xx:xx:xx:xx:xx --rstvw
+pylinkit --device xx:xx:xx:xx:xx:xx --rstvw
 
 To perform a firmware update:
 
-pygentracker --device xx:xx:xx:xx:xx:xx --fw firmware.img
+pylinkit --device xx:xx:xx:xx:xx:xx --fw firmware.img
 
-WARNING: the operation is very slow and make take 1.5 hours.  It is advised not to
+WARNING: the operation make take 5-6 minutes.  It is advised not to
 run this command if the battery is low and to ensure the device is not reset during
 operation.  Also note that the firmware update does not take effect until the
 next reboot of the device upon successful completion of the above command.
@@ -60,10 +60,11 @@ the above options.
 Logging file format
 ===================
 
-Log files are downloaded as binary and transcoded to JSON format as follows:
+Log files are downloaded as binary and transcoded to JSON or CSV (if --format csv is passed).
 
-GPS
----
+
+Example GPS
+-----------
 
 [
     {
@@ -108,8 +109,8 @@ GPS
 	...
 ]
 
-System
-------
+Example System
+--------------
 
 [
 	...
