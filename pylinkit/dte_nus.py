@@ -17,7 +17,7 @@ class DTENUS():
         self._queued_data = ''
         device.subscribe(NUS_TX_CHAR_UUID, self._data_handler)
 
-    def send(self, data, timeout=15.0, multi_response=False):
+    def send(self, data, timeout=2.0, multi_response=False):
         self._queued_data = ''
         self._event.clear()
         for x in [ data[0+i:NUS_CHAR_LENGTH+i] for i in range(0, len(data), NUS_CHAR_LENGTH) ]:
@@ -39,6 +39,5 @@ class DTENUS():
         logger.debug('PC <- DTE: %s', data.decode('ascii'))
         self._queued_data += data.decode('ascii')
         if data and data[-1] == 0xd:
-            logger.info('Setting flag')
             self._event.set()
             self._event.clear()

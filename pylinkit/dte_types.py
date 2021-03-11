@@ -410,7 +410,7 @@ class LOGFILE():
         r.batt_voltage, r.iTOW, r.fix_year, r.fix_month, r.fix_day, r.fix_hour, r.fix_min, r.fix_sec, r.valid, r.tAcc, r.nano, r.fixType, _, _, _, r.numSV, \
         r.lon, r.lat, r.height, r.hMSL, r.hAcc, r.vAcc, r.velN, r.velE, r.velD, r.gSpeed, r.headMot, \
         r.sAcc, r.headAcc, r.pDOP, r.vDOP, r.hDOP, r.headVeh = \
-            struct.unpack('<2xHIHBBBBBBIiBBBBB3xddiiIIiiiifIfffff', payload[:108])
+            struct.unpack('<xHIHBBBBBBIiBBBBBddiiIIiiiifIfffff', payload[:104])
         return r
 
     @staticmethod
@@ -418,12 +418,12 @@ class LOGFILE():
         records = []
         while data:
             r = LOGRECORD()
-            r.day, r.month, r.year, r.hours, r.mins, r.secs, r.log_t, payload = struct.unpack('<BBHBBBB120s', data[:128])
+            r.day, r.month, r.year, r.hours, r.mins, r.secs, r.log_t, payload_size = struct.unpack('<BBHBBBBB', data[:9])
             r.log_t = LOGFILE.LOG_TYPES[r.log_t]
             if (r.log_t == 'LOG_GPS'):
-                LOGFILE.decode_log_gps(payload, r)
+                LOGFILE.decode_log_gps(data[9:], r)
             else:
-                r.message = payload.decode('utf-8', errors='ignore').split('\x00')[0]
+                r.message = data[9:9+payload_size].decode('ascii', errors='ignore')
             records.append(r)
-            data = data[128:]
+            data = data[9+payload_size:]
         return records

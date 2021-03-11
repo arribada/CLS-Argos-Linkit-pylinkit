@@ -2,7 +2,7 @@ import logging
 import argparse
 import configparser
 import sys
-import pygentracker
+import pylinkit
 import json
 import csv
 from .ble import BLEDevice
@@ -61,7 +61,7 @@ def main():
 
     dev = None
     if args.device:
-        dev = pygentracker.GenTracker(args.device)
+        dev = pylinkit.GenTracker(args.device)
 
     if args.parmr:
         dev.sync()
