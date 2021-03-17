@@ -381,7 +381,11 @@ class PASPW():
             for x in entry['adaptedOrbitParametersBurst']:
                 hex_bytes += entry['adaptedOrbitParametersBurst'][x]
             for x in entry['constellationStatusBurst']:
-                hex_bytes += entry['constellationStatusBurst'][x]
+                csb = entry['constellationStatusBurst'][x]
+                if len(csb) & 1:
+                    logger.warn('Stuffing CSB record %s with 0000 missing bits', x)
+                    csb += '0'
+                hex_bytes += csb
         logger.debug('Allcast packet: %s', hex_bytes)
         return base64.b64encode(binascii.unhexlify(hex_bytes)).decode('ascii')
 

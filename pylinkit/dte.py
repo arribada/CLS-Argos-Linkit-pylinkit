@@ -68,7 +68,7 @@ class DTE():
         return LOGFILE.decode(raw_data)
 
     def paspw(self, json_file_data):
-        resp = self._nus.send(self._encode_command('PASPW', args=[PASPW.encode(json_file_data)]))
+        resp = self._nus.send(self._encode_command('PASPW', args=[PASPW.encode(json_file_data)]), timeout=5.0)
         self._decode_response(resp)
 
     def zonew(self, zone_dict):
