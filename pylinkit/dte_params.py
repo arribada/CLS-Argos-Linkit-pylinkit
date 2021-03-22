@@ -26,7 +26,7 @@ class DTEParamMap():
     [ "GLONASS_CONST_SELECT", "GNP08", DECIMAL, 0, 0, [], False ],
     [ "GNSS_HDOPFILT_EN", "GNP02", BOOLEAN, 0, 0, [], True ],
     [ "GNSS_HDOPFILT_THR", "GNP03", UINT, 2, 15, [], True ],
-    [ "GNSS_ACQ_TIMEOUT", "GNP05", UINT, 10, 60, [], True ],
+    [ "GNSS_ACQ_TIMEOUT", "GNP05", UINT, 10, 600, [], True ],
     [ "GNSS_NTRY", "GNP04", UINT, 0, 0, [], False ],
     [ "UNDERWATER_EN", "UNP01", BOOLEAN, 0, 0, [], True ],
     [ "DRY_TIME_BEFORE_TX", "UNP02", UINT, 1, 1440, [], True ],
@@ -41,7 +41,7 @@ class DTEParamMap():
     [ "DLOC_ARG_LB", "ARP12", AQPERIOD, 0, 0, [ 1, 2, 3, 4, 5, 6, 7, 8 ], True ],
     [ "LB_GNSS_HDOPFILT_THR", "LBP07", UINT, 2, 15, [], True ],
     [ "LB_ARGOS_DEPTH_PILE", "LBP08", DEPTHPILE, 0, 0, [1, 2, 3, 4, 8, 9, 10, 11, 12], True ],
-    [ "LB_GNSS_ACQ_TIMEOUT", "LBP09", UINT, 10, 60, [], True ],
+    [ "LB_GNSS_ACQ_TIMEOUT", "LBP09", UINT, 10, 600, [], True ],
     [ "SAMPLING_SURF_FREQ", "UNP04", UINT, 1, 1440, [], True ],
     [ "PP_MIN_ELEVATION", "PPP01", FLOAT, 0.0, 90.0, [], True ],
     [ "PP_MAX_ELEVATION", "PPP02", FLOAT, 0.0, 90.0, [], True ],
@@ -49,6 +49,7 @@ class DTEParamMap():
     [ "PP_MAX_PASSES", "PPP04", UINT, 1, 10000, [], True ],
     [ "PP_LINEAR_MARGIN", "PPP05", UINT, 1, 3600, [], True ],
     [ "PP_COMP_STEP", "PPP06", UINT, 1, 1000, [], True ],
+    [ "GNSS_COLD_ACQ_TIMEOUT", "GNP09", UINT, 10, 600, [], True ],
     ]
 
     @staticmethod
