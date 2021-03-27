@@ -49,7 +49,7 @@ class BLEDevice(object):
         return self._await_bleak(self._connection_client.read_gatt_char(uuid))
 
     def subscribe(self, uuid, callback):
-        self._await_bleak(self._connection_client.start_notify(uuid, callback))
+        self._await_bleak(self._connection_client.start_notify(uuid, lambda x, data: callback(x, bytes(data))))
 
 
     async def _scan_for_interval(self, interval: float):
