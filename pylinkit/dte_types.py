@@ -143,6 +143,31 @@ class AQPERIOD():
         return AQPERIOD.allowed[int(value)]
 
 
+class GNSSFIXMODE():
+    allowed = [-1, '2D', '3D', 'AUTO']
+
+    @staticmethod
+    def encode(value):
+        return str(GNSSFIXMODE.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return GNSSFIXMODE.allowed[int(value)]
+
+
+class GNSSDYNMODEL():
+    allowed = ['PORTABLE', -1, 'STATIONARY', 'PEDESTRIAN', 'AUTOMOTIVE', 'SEA', 'AIRBORNE_1G', 'AIRBORNE_2G', 'AIRBORNE_4G',
+               'WRIST_WORN_WATCH', 'BIKE']
+
+    @staticmethod
+    def encode(value):
+        return str(GNSSDYNMODEL.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return GNSSDYNMODEL.allowed[int(value)]
+
+
 
 class dotdict(dict):
     """dot.notation access to dictionary attributes"""

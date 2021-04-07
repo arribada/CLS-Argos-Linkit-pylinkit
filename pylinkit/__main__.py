@@ -27,6 +27,17 @@ parser.add_argument('--format', choices=['json', 'csv'], default='json', require
 args = parser.parse_args()
 
 
+class OrderedRawConfigParser(configparser.RawConfigParser):
+    def write(self, fp):
+        for section in self._sections:
+            fp.write("[%s]\n" % section)
+            for key in sorted( self._sections[section] ): 
+                if key != "__name__":
+                    fp.write("%s = %s\n" %
+                             (key, str( self._sections[section][ key ] ).replace('\n', '\n\t')))    
+            fp.write("\n")    
+
+
 def setup_logging(enabled, level):
     if enabled:
         logging.basicConfig(format='%(asctime)s\t%(module)s\t%(levelname)s\t%(message)s', level=logging.ERROR)
@@ -67,14 +78,14 @@ def main():
         dev.sync()
         d = {}
         d['PARAM'] = dev.get()
-        cfg = configparser.ConfigParser()
+        cfg = OrderedRawConfigParser()
         cfg.optionxform = lambda option: option
         cfg.read_dict(dictionary=d)
         cfg.write(args.parmr)
         args.parmr.close()
 
     if args.parmw:
-        cfg = configparser.ConfigParser()
+        cfg = OrderedRawConfigParser()
         cfg.optionxform = lambda option: option
         cfg.read_string(args.parmw.read())
         dev.set(cfg['PARAM'])
@@ -82,14 +93,14 @@ def main():
     if args.zoner:
         d = {}
         d['ZONE'] = dev.zoner()
-        cfg = configparser.ConfigParser()
+        cfg = OrderedRawConfigParser()
         cfg.optionxform = lambda option: option
         cfg.read_dict(dictionary=d)
         cfg.write(args.zoner)
         args.zoner.close()
 
     if args.zonew:
-        cfg = configparser.ConfigParser()
+        cfg = OrderedRawConfigParser()
         cfg.optionxform = lambda option: option
         cfg.read_string(args.zonew.read())
         dev.zonew(cfg['ZONE'])

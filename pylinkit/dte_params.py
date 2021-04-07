@@ -50,6 +50,8 @@ class DTEParamMap():
     [ "PP_LINEAR_MARGIN", "PPP05", UINT, 1, 3600, [], True ],
     [ "PP_COMP_STEP", "PPP06", UINT, 1, 1000, [], True ],
     [ "GNSS_COLD_ACQ_TIMEOUT", "GNP09", UINT, 10, 600, [], True ],
+    [ "GNSS_FIX_MODE", "GNP10", GNSSFIXMODE, 0, 0, [], True ],
+    [ "GNSS_DYN_MODEL", "GNP11", GNSSDYNMODEL, 0, 0, [], True ],
     ]
 
     @staticmethod
