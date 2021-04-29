@@ -375,7 +375,7 @@ class ZONE():
         packer.pack_bits(ZONE.encode_comms_vector(zone.comms_vector), 2)
         delta_arg_loc_argos_seconds = ZONE.encode_arg_loc_argos(int(zone.delta_arg_loc_argos_seconds))
         packer.pack_bits(delta_arg_loc_argos_seconds, 4)
-        packer.pack_bits(0, 7) # zone.delta_arg_loc_cellular_seconds not used!
+        packer.pack_bits(1, 7) # zone.delta_arg_loc_cellular_seconds not used!
         packer.pack_bits(int(zone.argos_extra_flags_enable), 1)
         argos_depth_pile = int(DEPTHPILE.encode(zone.argos_depth_pile))
         packer.pack_bits(argos_depth_pile, 4)
