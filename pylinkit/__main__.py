@@ -132,8 +132,8 @@ def main():
         scan_dev = BLEDevice()
         result = scan_dev.scan()
         for x in result:
-            if (x.name == 'GenTracker' or x.name == 'linkit'):
-                print(x.address)
+            if ('Linkit' in x.name):
+                print(x.address, x.name)
 
 
 if __name__ == "__main__":

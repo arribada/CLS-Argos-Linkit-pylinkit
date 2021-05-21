@@ -436,7 +436,7 @@ class LOGFILE():
 
     @staticmethod
     def decode_log_gps(payload, r):
-        r.batt_voltage, r.iTOW, r.fix_year, r.fix_month, r.fix_day, r.fix_hour, r.fix_min, r.fix_sec, r.valid, r.tAcc, r.nano, r.fixType, _, _, _, r.numSV, \
+        r.batt_voltage, r.iTOW, r.fix_year, r.fix_month, r.fix_day, r.fix_hour, r.fix_min, r.fix_sec, r.valid, r.onTime, r.ttff, r.fixType, _, _, _, r.numSV, \
         r.lon, r.lat, r.height, r.hMSL, r.hAcc, r.vAcc, r.velN, r.velE, r.velD, r.gSpeed, r.headMot, \
         r.sAcc, r.headAcc, r.pDOP, r.vDOP, r.hDOP, r.headVeh = \
             struct.unpack('<xHIHBBBBBBIiBBBBBddiiIIiiiifIfffff', payload[:104])
