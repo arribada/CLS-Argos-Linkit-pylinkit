@@ -270,45 +270,26 @@ class ZONE():
         return options[int(x)]
 
     @staticmethod
-    def convert_longitude_to_decimal(longitude):
-        d = 0
-        longitude = int(longitude)
-        if (longitude < (360*1E4)): # E
-            d = longitude * 5*1E-5
-        else:  # W
-            d = ((longitude - (360*1E4)) * -5*1E-5)
-
-        return d
-
-    @staticmethod
-    def convert_decimal_to_longitude(longitude):
-        longitude = float(longitude)
-        l = 0
-        if (longitude > 0):# E
-            l = int(2*1E4 * longitude)
-        else: # W
-            l = int((-2*1E4 * longitude) + (360*1E4))
-        return l
-
-    @staticmethod
-    def convert_latitude_to_decimal(latitude):
-        d = 0
-        latitude = int(latitude)
-        if (latitude < (180*1E4)): # S
-            d = latitude * (-5 * 1E-5)
-        else: # N
-            d = (latitude - (180*1E4)) * (5 * 1E-5)
-        return d
-
-    @staticmethod
-    def convert_decimal_to_latitude(latitude):
-        l = 0
-        latitude = float(latitude)
-        if (latitude < 0): # S
-            l = int(-2E4 * latitude)
+    def convert_longitude_to_float(longitude):
+        if ((float(longitude) / 20000) > 180):
+            return (float(longitude) / 20000) - 360;
         else:
-            l = int((2E4 * latitude) + (180*1E4))
-        return l
+            return float(longitude) / 20000;
+
+    @staticmethod
+    def convert_float_to_longitude(longitude):
+        if (float(longitude) < 0):
+            return int((float(longitude) + 360) * 20000)
+        else:
+            return int(float(longitude) * 20000);
+
+    @staticmethod
+    def convert_latitude_to_float(latitude):
+        return (float(latitude) / 20000) - 90;
+
+    @staticmethod
+    def convert_float_to_latitude(latitude):
+        return int((float(latitude) + 90) * 20000);
 
     @staticmethod
     def decode(b64_data):
@@ -345,9 +326,9 @@ class ZONE():
         zone.hdop_filter_threshold = packer.extract_bits(4)
         zone.gnss_acquisition_timeout_seconds = packer.extract_bits(8)
         center_longitude_x = packer.extract_bits(23)
-        zone.center_longitude_x = ZONE.convert_longitude_to_decimal(center_longitude_x)
+        zone.center_longitude_x = ZONE.convert_longitude_to_float(center_longitude_x)
         center_latitude_y = packer.extract_bits(22)
-        zone.center_latitude_y = ZONE.convert_latitude_to_decimal(center_latitude_y)
+        zone.center_latitude_y = ZONE.convert_latitude_to_float(center_latitude_y)
         zone.radius_m = packer.extract_bits(12) * 50
         return zone
 
@@ -375,7 +356,7 @@ class ZONE():
         packer.pack_bits(ZONE.encode_comms_vector(zone.comms_vector), 2)
         delta_arg_loc_argos_seconds = ZONE.encode_arg_loc_argos(int(zone.delta_arg_loc_argos_seconds))
         packer.pack_bits(delta_arg_loc_argos_seconds, 4)
-        packer.pack_bits(1, 7) # zone.delta_arg_loc_cellular_seconds not used!
+        packer.pack_bits(zone.delta_arg_loc_cellular_seconds, 7)
         packer.pack_bits(int(zone.argos_extra_flags_enable), 1)
         argos_depth_pile = int(DEPTHPILE.encode(zone.argos_depth_pile))
         packer.pack_bits(argos_depth_pile, 4)
@@ -386,9 +367,9 @@ class ZONE():
         packer.pack_bits(int(zone.gnss_extra_flags_enable), 1)
         packer.pack_bits(int(zone.hdop_filter_threshold), 4)
         packer.pack_bits(int(zone.gnss_acquisition_timeout_seconds), 8)
-        center_longitude_x = ZONE.convert_decimal_to_longitude(zone.center_longitude_x)
+        center_longitude_x = ZONE.convert_float_to_longitude(zone.center_longitude_x)
         packer.pack_bits(center_longitude_x, 23)
-        center_latitude_y = ZONE.convert_decimal_to_latitude(zone.center_latitude_y)
+        center_latitude_y = ZONE.convert_float_to_latitude(zone.center_latitude_y)
         packer.pack_bits(center_latitude_y, 22)
         packer.pack_bits(int(int(zone.radius_m) / 50), 12)
 
