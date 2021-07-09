@@ -3,8 +3,6 @@ import argparse
 import configparser
 import sys
 import pylinkit
-import json
-import csv
 from .ble import BLEDevice
 
 
@@ -23,7 +21,6 @@ parser.add_argument('--scan', action='store_true', required=False, help='Scan fo
 parser.add_argument('--debug', action='store_true', required=False, help='Turn on debug trace')
 parser.add_argument('--dump_sensor', type=argparse.FileType('w'), required=False, help='Dump sensor log file')
 parser.add_argument('--dump_system', type=argparse.FileType('w'), required=False, help='Dump system log file')
-parser.add_argument('--format', choices=['json', 'csv'], default='json', required=False, help='Dump file format (JSON or CSV); default is JSON')
 args = parser.parse_args()
 
 
@@ -49,17 +46,6 @@ def setup_logging(enabled, level):
             logging.getLogger().setLevel(logging.INFO)
         elif level == 'debug':
             logging.getLogger().setLevel(logging.DEBUG)
-
-
-def write_formatted_dumpd(file, data, format):
-    if format == 'csv':
-        if data:
-            csv_columns = list(data[0].keys())
-            writer = csv.DictWriter(file, fieldnames=csv_columns, lineterminator='\n')
-            writer.writeheader()
-            writer.writerows(data)
-    elif format == 'json':
-        file.write(json.dumps(data, indent=4, sort_keys=True))
 
 
 def main():
@@ -109,11 +95,11 @@ def main():
         dev.paspw(args.paspw.read())
 
     if args.dump_sensor:
-        write_formatted_dumpd(args.dump_sensor, dev.dumpd('sensor'), args.format)
+        args.dump_sensor.write(dev.dumpd('sensor'))
         args.dump_sensor.close()
 
     if args.dump_system:
-        write_formatted_dumpd(args.dump_system, dev.dumpd('system'), args.format)
+        args.dump_system.write(dev.dumpd('system'))
         args.dump_system.close()
 
     if args.fw:

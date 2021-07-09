@@ -49,7 +49,9 @@ class DTEParamMap():
     [ "PP_MIN_DURATION", "PPP03", UINT ],
     [ "PP_MAX_PASSES", "PPP04", UINT ],
     [ "PP_LINEAR_MARGIN", "PPP05", UINT ],
-    [ "PP_COMP_STEP", "PPP06", UINT ]
+    [ "PP_COMP_STEP", "PPP06", UINT ],
+    [ "GNSS_HACCFILT_ENABLE", "GNP20", BOOLEAN ],
+    [ "GNSS_HACCFILT_THR", "GNP21", UINT ],
     ]
 
     @staticmethod

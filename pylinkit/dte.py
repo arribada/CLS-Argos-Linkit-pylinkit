@@ -61,11 +61,11 @@ class DTE():
         log_d = ['system', 'sensor']
         resp = self._nus.send(self._encode_command('DUMPD', args=['{log_d}'.format(log_d=log_d.index(log_type))]), multi_response=True)
         responses = self._decode_multi_response(resp)
-        raw_data = b''
+        raw_data = ''
         for r in responses:
             _, _, data = r.split(',')
-            raw_data += BASE64.decode(data)
-        return LOGFILE.decode(raw_data)
+            raw_data += BASE64.decode(data).decode('ascii')
+        return raw_data
 
     def paspw(self, json_file_data):
         resp = self._nus.send(self._encode_command('PASPW', args=[PASPW.encode(json_file_data)]), timeout=5.0)
