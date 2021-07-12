@@ -52,6 +52,7 @@ class DTEParamMap():
     [ "PP_COMP_STEP", "PPP06", UINT ],
     [ "GNSS_HACCFILT_ENABLE", "GNP20", BOOLEAN ],
     [ "GNSS_HACCFILT_THR", "GNP21", UINT ],
+    [ "GNSS_MIN_NUM_FIXES", "GNP22", UINT ],
     ]
 
     @staticmethod
