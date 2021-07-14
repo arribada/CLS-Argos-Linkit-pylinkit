@@ -53,6 +53,9 @@ class DTEParamMap():
     [ "GNSS_HACCFILT_ENABLE", "GNP20", BOOLEAN ],
     [ "GNSS_HACCFILT_THR", "GNP21", UINT ],
     [ "GNSS_MIN_NUM_FIXES", "GNP22", UINT ],
+    [ "GNSS_COLD_START_RETRY_PERIOD", "GNP23", UINT ],
+    [ "ARGOS_TIME_SYNC_BURST_EN", "ARP30", BOOLEAN ],
+    [ "LED_MODE", "LDP", LEDMODE ],
     ]
 
     @staticmethod

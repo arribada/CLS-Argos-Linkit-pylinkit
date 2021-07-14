@@ -143,6 +143,18 @@ class AQPERIOD():
         return AQPERIOD.allowed[int(value)]
 
 
+class LEDMODE():
+    allowed = ['OFF', '24HRS', -1, 'ALWAYS']
+
+    @staticmethod
+    def encode(value):
+        return str(LEDMODE.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return LEDMODE.allowed[int(value)]
+
+
 class GNSSFIXMODE():
     allowed = [-1, '2D', '3D', 'AUTO']
 
