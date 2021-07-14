@@ -55,7 +55,7 @@ class DTEParamMap():
     [ "GNSS_MIN_NUM_FIXES", "GNP22", UINT ],
     [ "GNSS_COLD_START_RETRY_PERIOD", "GNP23", UINT ],
     [ "ARGOS_TIME_SYNC_BURST_EN", "ARP30", BOOLEAN ],
-    [ "LED_MODE", "LDP", LEDMODE ],
+    [ "LED_MODE", "LDP01", LEDMODE ],
     ]
 
     @staticmethod
