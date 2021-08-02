@@ -45,8 +45,10 @@ class OTAFW():
         self._device.char_write(OTA_BASE_ADDR_CHAR_UUID, struct.pack('<I', ACTION_DONE))
         print('Data has been submitted...')
         print('Waiting for image transfer ACK...this may take some time...CTRL-C to abort')
-        is_set = self._event.wait(6*60)
+        is_set = self._event.wait(10*60)
         if is_set is False:
+            # Abort pending OTA update
+            self._device.char_write(OTA_BASE_ADDR_CHAR_UUID, struct.pack('<I', ACTION_ABORT))
             raise Exception('Time out waiting for STATUS handshake')
         if (self._status == 0):
             print('Image transfer ACK')

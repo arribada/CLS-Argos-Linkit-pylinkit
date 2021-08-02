@@ -64,7 +64,7 @@ class DTE():
         raw_data = ''
         for r in responses:
             _, _, data = r.split(',')
-            raw_data += BASE64.decode(data).decode('ascii')
+            raw_data += BASE64.decode(data).decode('ascii', errors='ignore')
         return raw_data
 
     def paspw(self, json_file_data):
