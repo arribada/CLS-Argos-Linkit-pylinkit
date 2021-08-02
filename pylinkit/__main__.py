@@ -55,6 +55,8 @@ def main():
 
     if args.debug:
         setup_logging(True, 'debug')
+    else:
+        setup_logging(True, 'info')
 
     dev = None
     if args.device:
