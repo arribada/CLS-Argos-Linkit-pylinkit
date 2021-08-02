@@ -35,6 +35,7 @@ class DTENUSProtocol():
             self._expected_length -= len(buffer)
             if self._expected_length == 0:
                 if self._expected_MMM is not None:
+                    print(int(100 * self._last_nnn / self._expected_MMM), '%', end='\r')
                     if self._last_nnn == self._expected_MMM:
                         self.reset()
                 else:
