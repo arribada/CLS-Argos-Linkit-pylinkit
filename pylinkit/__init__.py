@@ -24,8 +24,8 @@ class GenTracker():
     def get_attrs(self):
         return self._map.keys()
 
-    def firmware_update(self, data, file_id=0):
-        self._otafw.send_update_file(file_id, data)
+    def firmware_update(self, data, file_id=0, timeout=None):
+        self._otafw.send_update_file(file_id, data, timeout)
 
     def paspw(self, json_file_data):
         self._dte.paspw(json_file_data)

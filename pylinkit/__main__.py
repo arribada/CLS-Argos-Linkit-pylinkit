@@ -8,6 +8,7 @@ from .ble import BLEDevice
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--fw', type=argparse.FileType('rb'), required=False, help='Firmware filename for FW OTA update')
+parser.add_argument('--timeout', type=float, required=False, default=None, help='BLE communications timeout')
 parser.add_argument('--device', type=str, required=False, help='xx:xx:xx:xx:xx:xx BLE device address')
 parser.add_argument('--parmr', type=argparse.FileType('w'), required=False, help='Filename to write [PARAM] configuration to')
 parser.add_argument('--rstvw', action='store_true', required=False, help='Reset variables (TX_COUNTER)')
@@ -105,7 +106,7 @@ def main():
         args.dump_system.close()
 
     if args.fw:
-        dev.firmware_update(args.fw.read(), 0)
+        dev.firmware_update(args.fw.read(), 0, args.timeout)
 
     if args.factw:
         dev.factw()

@@ -10,6 +10,7 @@ ACTION_START = 1
 ACTION_DONE = 7
 ACTION_ABORT = 8
 
+DEFAULT_TIMEOUT = 10 * 60
 
 class OTAFW():
     def __init__(self, device):
@@ -18,7 +19,7 @@ class OTAFW():
         self._status = 0
         device.subscribe(OTA_STATUS_CHAR_UUID, self._status_handler)
 
-    def send_update_file(self, file_id, data):
+    def send_update_file(self, file_id, data, timeout):
         self._status = 0
         action = ACTION_START | file_id << 8
         self._event.clear()
@@ -45,7 +46,7 @@ class OTAFW():
         self._device.char_write(OTA_BASE_ADDR_CHAR_UUID, struct.pack('<I', ACTION_DONE))
         print('Data has been submitted...')
         print('Waiting for image transfer ACK...this may take some time...CTRL-C to abort')
-        is_set = self._event.wait(10*60)
+        is_set = self._event.wait(timeout or DEFAULT_TIMEOUT)
         if is_set is False:
             # Abort pending OTA update
             self._device.char_write(OTA_BASE_ADDR_CHAR_UUID, struct.pack('<I', ACTION_ABORT))
