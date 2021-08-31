@@ -36,7 +36,7 @@ class DTE():
         raise Exception('Bad response - {}'.format(resp))
 
     def _decode_multi_response(self, resp):
-        return [self._decode_response(r + '\r') for r in resp.split('\r') if r]            
+        return [self._decode_response(r + '\r') for r in resp.split('\r') if r]
 
     def _decode_key_values(self, payload):
         m = {}
@@ -61,10 +61,11 @@ class DTE():
         log_d = ['system', 'sensor']
         resp = self._nus.send(self._encode_command('DUMPD', args=['{log_d}'.format(log_d=log_d.index(log_type))]), multi_response=True)
         responses = self._decode_multi_response(resp)
-        raw_data = ''
+        raw_data = b''
         for r in responses:
             _, _, data = r.split(',')
-            raw_data += BASE64.decode(data).decode('ascii', errors='ignore')
+            decoded_data = BASE64.decode(data)
+            raw_data += decoded_data
         return raw_data
 
     def paspw(self, json_file_data):
@@ -74,7 +75,7 @@ class DTE():
     def zonew(self, zone_dict):
         resp = self._nus.send(self._encode_command('ZONEW', args=[ZONE.encode(zone_dict)]))
         self._decode_response(resp)
-    
+
     def zoner(self, zone_id):
         resp = self._nus.send(self._encode_command('ZONER', args=[str(zone_id)]))
         return ZONE.decode(self._decode_response(resp))
@@ -82,11 +83,11 @@ class DTE():
     def factw(self):
         resp = self._nus.send(self._encode_command('FACTW'))
         self._decode_response(resp)
-    
+
     def rstvw(self, var_id=1):
         resp = self._nus.send(self._encode_command('RSTVW', args=[str(var_id)]))
         self._decode_response(resp)
-    
+
     def rstbw(self):
         resp = self._nus.send(self._encode_command('RSTBW'))
         self._decode_response(resp)
