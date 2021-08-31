@@ -1,6 +1,6 @@
 from .dte_nus import DTENUS
 from .dte_params import DTEParamMap
-from .dte_types import BASE64, ZONE, PASPW, LOGFILE
+from .dte_types import BASE64, ZONE, PASPW
 import re
 import logging
 
@@ -79,6 +79,10 @@ class DTE():
     def zoner(self, zone_id):
         resp = self._nus.send(self._encode_command('ZONER', args=[str(zone_id)]))
         return ZONE.decode(self._decode_response(resp))
+
+    def erase(self, log_type):
+        resp = self._nus.send(self._encode_command('ERASE', args=[str(log_type)]))
+        self._decode_response(resp)
 
     def factw(self):
         resp = self._nus.send(self._encode_command('FACTW'))

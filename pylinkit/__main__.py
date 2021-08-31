@@ -5,10 +5,11 @@ import sys
 import pylinkit
 from .ble import BLEDevice
 
-
+erase_options = ['sensor', 'system', 'all']
 parser = argparse.ArgumentParser()
 parser.add_argument('--fw', type=argparse.FileType('rb'), required=False, help='Firmware filename for FW OTA update')
 parser.add_argument('--timeout', type=float, required=False, default=None, help='BLE communications timeout')
+parser.add_argument('--erase', type=str, choices=erase_options, required=False, help='Erase log file')
 parser.add_argument('--device', type=str, required=False, help='xx:xx:xx:xx:xx:xx BLE device address')
 parser.add_argument('--parmr', type=argparse.FileType('w'), required=False, help='Filename to write [PARAM] configuration to')
 parser.add_argument('--rstvw', action='store_true', required=False, help='Reset variables (TX_COUNTER)')
@@ -20,8 +21,8 @@ parser.add_argument('--zoner', type=argparse.FileType('w'), required=False, help
 parser.add_argument('--paspw', type=argparse.FileType('r'), required=False, help='Filename (JSON) to read pass predict configuration from')
 parser.add_argument('--scan', action='store_true', required=False, help='Scan for beacons')
 parser.add_argument('--debug', action='store_true', required=False, help='Turn on debug trace')
-parser.add_argument('--dump_sensor', type=argparse.FileType('w'), required=False, help='Dump sensor log file')
-parser.add_argument('--dump_system', type=argparse.FileType('w'), required=False, help='Dump system log file')
+parser.add_argument('--dump_sensor', type=argparse.FileType('wb'), required=False, help='Dump sensor log file')
+parser.add_argument('--dump_system', type=argparse.FileType('wb'), required=False, help='Dump system log file')
 args = parser.parse_args()
 
 
@@ -104,6 +105,9 @@ def main():
     if args.dump_system:
         args.dump_system.write(dev.dumpd('system'))
         args.dump_system.close()
+
+    if args.erase:
+        dev.erase(erase_options.index(args.erase) + 1)
 
     if args.fw:
         dev.firmware_update(args.fw.read(), 0, args.timeout)

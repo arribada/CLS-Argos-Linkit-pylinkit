@@ -39,6 +39,9 @@ class GenTracker():
     def dumpd(self, log_type):
         return self._dte.dumpd(log_type)
 
+    def erase(self, log_type):
+        return self._dte.erase(log_type)
+
     def factw(self):
         self._dte.factw()
 

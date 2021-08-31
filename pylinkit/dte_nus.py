@@ -35,8 +35,9 @@ class DTENUSProtocol():
             self._expected_length -= len(buffer)
             if self._expected_length == 0:
                 if self._expected_MMM is not None:
-                    print(int(100 * self._last_nnn / self._expected_MMM), '%', end='\r')
-                    if self._last_nnn == self._expected_MMM:
+                    percent = int((100 * (self._last_mmm+1)) / (self._expected_MMM+1))
+                    print(f'{percent:.2f}%', end='\r')
+                    if self._last_mmm == self._expected_MMM:
                         self.reset()
                 else:
                     self.reset()
@@ -48,7 +49,7 @@ class DTENUSProtocol():
         self._expected_length = 0
         self._expected_MMM = None
         self._is_terminated = True
-        self._last_nnn = None
+        self._last_mmm = None
 
     def _is_header(self, buffer):
         return buffer[0] == '$'
@@ -64,28 +65,28 @@ class DTENUSProtocol():
             if success.group('cmd') == 'DUMPD':
                 try:
                     args = buffer.split(',')
-                    nnn = int(args[0],16)
-                    mmm = int(args[1],16)
-                    if self._last_nnn is None:
-                        if nnn != 0:
+                    mmm = int(args[0],16)
+                    MMM = int(args[1],16)
+                    if self._last_mmm is None:
+                        if mmm != 0:
                             self.reset()
-                            logger.error(f'First DUMPD nnn must be zero: got {nnn}')
+                            logger.error(f'First DUMPD mmm must be zero: got {mmm}')
                             raise Exception()
-                        if mmm <= 0:
+                        if MMM < 0:
                             self.reset()
-                            logger.error(f'First DUMPD MMM must be >0: got {mmm}')
+                            logger.error(f'First DUMPD MMM must be >=0: got {MMM}')
                             raise Exception()
-                        self._last_nnn = 0
-                        self._expected_MMM = mmm
+                        self._last_mmm = 0
+                        self._expected_MMM = MMM
                     else:
-                        self._last_nnn += 1
-                        if nnn != self._last_nnn:
+                        self._last_mmm += 1
+                        if mmm != self._last_mmm:
                             self.reset()
-                            logger.error(f'Unexpected DUMPD nnn: got {nnn} but expected {nnn}')
+                            logger.error(f'Unexpected DUMPD mmm: got {mmm} but expected {self._last_mmm}')
                             raise Exception()
-                        if nnn > self._expected_MMM:
+                        if mmm > self._expected_MMM:
                             self.reset()
-                            logger.error(f'Unexpected DUMPD nnn: got {nnn} which exceeds {self._expected_MMM}')
+                            logger.error(f'Unexpected DUMPD mmm: got {mmm} which exceeds {self._expected_MMM}')
                             raise Exception()
                 except:
                     self.reset()
