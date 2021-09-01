@@ -10,7 +10,7 @@ ACTION_START = 1
 ACTION_DONE = 7
 ACTION_ABORT = 8
 
-DEFAULT_TIMEOUT = 10 * 60
+DEFAULT_TIMEOUT = 20 * 60
 
 class OTAFW():
     def __init__(self, device):
