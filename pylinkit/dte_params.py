@@ -56,6 +56,7 @@ class DTEParamMap():
     [ "GNSS_COLD_START_RETRY_PERIOD", "GNP23", UINT ],
     [ "ARGOS_TIME_SYNC_BURST_EN", "ARP30", BOOLEAN ],
     [ "LED_MODE", "LDP01", LEDMODE ],
+    [ "ARGOS_TX_JITTER_EN", "ARP31", BOOLEAN ],
     ]
 
     @staticmethod
