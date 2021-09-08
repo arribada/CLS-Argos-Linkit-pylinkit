@@ -57,6 +57,8 @@ class DTEParamMap():
     [ "ARGOS_TIME_SYNC_BURST_EN", "ARP30", BOOLEAN ],
     [ "LED_MODE", "LDP01", LEDMODE ],
     [ "ARGOS_TX_JITTER_EN", "ARP31", BOOLEAN ],
+    [ "ARGOS_RX_EN", "ARP32", BOOLEAN ],
+    [ "ARGOS_RX_MAX_WINDOW", "ARP33", UINT ],
     ]
 
     @staticmethod
