@@ -119,6 +119,18 @@ class ARGOSMODE():
         return ARGOSMODE.allowed[int(value)]
 
 
+class ARGOSMODEZONE():
+    allowed = ['OFF', 'LEGACY', 'PASS_PREDICTION', 'DUTY_CYCLE']
+
+    @staticmethod
+    def encode(value):
+        return str(ARGOSMODEZONE.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return ARGOSMODEZONE.allowed[int(value)]
+
+
 class DEPTHPILE():
     allowed = [-1,1,2,3,4,-1,-1,-1,8,12,16,20,24]
 
@@ -332,7 +344,7 @@ class ZONE():
         zone.argos_power = ARGOSPOWER.decode(packer.extract_bits(2)+1)
         zone.argos_time_repetition_seconds = packer.extract_bits(7)
         zone.argos_time_repetition_seconds *= 10
-        zone.argos_mode = ARGOSMODE.decode(packer.extract_bits(2))
+        zone.argos_mode = ARGOSMODEZONE.decode(packer.extract_bits(2))
         zone.argos_duty_cycle = '{:06X}'.format(packer.extract_bits(24))
         zone.gnss_extra_flags_enable = packer.extract_bits(1)
         zone.hdop_filter_threshold = packer.extract_bits(4)
@@ -374,7 +386,7 @@ class ZONE():
         packer.pack_bits(argos_depth_pile, 4)
         packer.pack_bits(int(ARGOSPOWER.encode(zone.argos_power))-1, 2)
         packer.pack_bits(int(int(zone.argos_time_repetition_seconds) / 10), 7)
-        packer.pack_bits(int(ARGOSMODE.encode(zone.argos_mode)), 2)
+        packer.pack_bits(int(ARGOSMODEZONE.encode(zone.argos_mode)), 2)
         packer.pack_bits(int(zone.argos_duty_cycle, 16), 24)
         packer.pack_bits(int(zone.gnss_extra_flags_enable), 1)
         packer.pack_bits(int(zone.hdop_filter_threshold), 4)
