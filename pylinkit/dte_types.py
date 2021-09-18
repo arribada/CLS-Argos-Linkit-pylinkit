@@ -120,7 +120,7 @@ class ARGOSMODE():
 
 
 class ARGOSMODEZONE():
-    allowed = ['OFF', 'LEGACY', 'PASS_PREDICTION', 'DUTY_CYCLE']
+    allowed = ['OFF', 'PASS_PREDICTION', 'LEGACY', 'DUTY_CYCLE']
 
     @staticmethod
     def encode(value):
