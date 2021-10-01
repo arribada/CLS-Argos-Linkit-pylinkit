@@ -88,7 +88,7 @@ class DTE():
         resp = self._nus.send(self._encode_command('FACTW'))
         self._decode_response(resp)
 
-    def rstvw(self, var_id=1):
+    def rstvw(self, var_id):
         resp = self._nus.send(self._encode_command('RSTVW', args=[str(var_id)]))
         self._decode_response(resp)
 

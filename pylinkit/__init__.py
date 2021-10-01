@@ -45,8 +45,8 @@ class GenTracker():
     def factw(self):
         self._dte.factw()
 
-    def rstvw(self):
-        self._dte.rstvw()
+    def rstvw(self, index):
+        self._dte.rstvw(index)
 
     def rstbw(self):
         self._dte.rstbw()

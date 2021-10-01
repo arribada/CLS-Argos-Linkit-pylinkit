@@ -59,6 +59,8 @@ class DTEParamMap():
     [ "ARGOS_TX_JITTER_EN", "ARP31", BOOLEAN ],
     [ "ARGOS_RX_EN", "ARP32", BOOLEAN ],
     [ "ARGOS_RX_MAX_WINDOW", "ARP33", UINT ],
+    [ "ARGOS_RX_AOP_UPDATE_PERIOD", "ARP34", UINT ],
+    [ "RX_COUNTER", "ARP35", UINT ],
     ]
 
     @staticmethod

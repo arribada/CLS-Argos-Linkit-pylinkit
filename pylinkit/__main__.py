@@ -6,13 +6,15 @@ import pylinkit
 from .ble import BLEDevice
 
 erase_options = ['sensor', 'system', 'all']
+resetv_options = {'tx_counter': 1, 'rx_counter': 3}
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--fw', type=argparse.FileType('rb'), required=False, help='Firmware filename for FW OTA update')
 parser.add_argument('--timeout', type=float, required=False, default=None, help='BLE communications timeout')
 parser.add_argument('--erase', type=str, choices=erase_options, required=False, help='Erase log file')
 parser.add_argument('--device', type=str, required=False, help='xx:xx:xx:xx:xx:xx BLE device address')
 parser.add_argument('--parmr', type=argparse.FileType('w'), required=False, help='Filename to write [PARAM] configuration to')
-parser.add_argument('--rstvw', action='store_true', required=False, help='Reset variables (TX_COUNTER)')
+parser.add_argument('--rstvw', type=str, choices=resetv_options.keys(), required=False, help='Reset variable: tx_counter or rx_counter')
 parser.add_argument('--rstbw', action='store_true', required=False, help='Reset beacon')
 parser.add_argument('--factw', action='store_true', required=False, help='Factory reset (WARNING: erases all stored logs and configuration!)')
 parser.add_argument('--parmw', type=argparse.FileType('r'), required=False, help='Filename to read [PARAM] configuration from')
@@ -116,7 +118,7 @@ def main():
         dev.factw()
 
     if args.rstvw:
-        dev.rstvw()
+        dev.rstvw(resetv_options[args.rstvw])
 
     if args.rstbw:
         dev.rstbw()
