@@ -6,7 +6,7 @@ import pylinkit
 from .ble import BLEDevice
 
 erase_options = ['sensor', 'system', 'all']
-resetv_options = {'tx_counter': 1, 'rx_counter': 3}
+resetv_options = {'tx_counter': 1, 'rx_counter': 3, 'rx_time': 4}
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--fw', type=argparse.FileType('rb'), required=False, help='Firmware filename for FW OTA update')
