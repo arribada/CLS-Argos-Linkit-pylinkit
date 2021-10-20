@@ -62,6 +62,7 @@ class DTEParamMap():
     [ "ARGOS_RX_AOP_UPDATE_PERIOD", "ARP34", UINT ],
     [ "RX_COUNTER", "ART10", UINT ],
     [ "RX_TIME", "ART11", UINT ],
+    [ "GNSS_ASSISTNOW_EN", "GNP24", BOOLEAN ],
     ]
 
     @staticmethod
