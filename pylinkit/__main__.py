@@ -18,8 +18,6 @@ parser.add_argument('--rstvw', type=str, choices=resetv_options.keys(), required
 parser.add_argument('--rstbw', action='store_true', required=False, help='Reset beacon')
 parser.add_argument('--factw', action='store_true', required=False, help='Factory reset (WARNING: erases all stored logs and configuration!)')
 parser.add_argument('--parmw', type=argparse.FileType('r'), required=False, help='Filename to read [PARAM] configuration from')
-parser.add_argument('--zonew', type=argparse.FileType('r'), required=False, help='Filename to read [ZONE] configuration from')
-parser.add_argument('--zoner', type=argparse.FileType('w'), required=False, help='Filename to write [ZONE] configuration to')
 parser.add_argument('--paspw', type=argparse.FileType('r'), required=False, help='Filename (JSON) to read pass predict configuration from')
 parser.add_argument('--scan', action='store_true', required=False, help='Scan for beacons')
 parser.add_argument('--debug', action='store_true', required=False, help='Turn on debug trace')
@@ -81,21 +79,6 @@ def main():
         cfg.optionxform = lambda option: option
         cfg.read_string(args.parmw.read())
         dev.set(cfg['PARAM'])
-
-    if args.zoner:
-        d = {}
-        d['ZONE'] = dev.zoner()
-        cfg = OrderedRawConfigParser()
-        cfg.optionxform = lambda option: option
-        cfg.read_dict(dictionary=d)
-        cfg.write(args.zoner)
-        args.zoner.close()
-
-    if args.zonew:
-        cfg = OrderedRawConfigParser()
-        cfg.optionxform = lambda option: option
-        cfg.read_string(args.zonew.read())
-        dev.zonew(cfg['ZONE'])
 
     if args.paspw:
         dev.paspw(args.paspw.read())

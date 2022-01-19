@@ -167,6 +167,18 @@ class LEDMODE():
         return LEDMODE.allowed[int(value)]
 
 
+class ZONETYPE():
+    allowed = ['CIRCLE']
+
+    @staticmethod
+    def encode(value):
+        return str(ZONETYPE.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return ZONETYPE.allowed[int(value)]
+
+
 class GNSSFIXMODE():
     allowed = [-1, '2D', '3D', 'AUTO']
 
@@ -253,151 +265,6 @@ class Packer():
             n_bits = min(8 - out_bit_offset, num_bits)
 
         self._unpack_pos += total_bits
-
-
-class ZONE():
-
-    @staticmethod
-    def decode_arg_loc_argos(x):
-        options = [-1, 7 * 60, 15 * 60, 30 * 60, 1 * 60 * 60, 2 * 60 * 60, 3 * 60 * 60, \
-                    4 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60, -1, -1, -1, -1, 0]
-        return options[x]
-
-    @staticmethod
-    def decode_comms_vector(x):
-        options = ['UNCHANGED', 'ARGOS_PREFERRED', 'CELLULAR_PREFERRED']
-        return options[x]
-
-    @staticmethod
-    def encode_comms_vector(x):
-        options = ['UNCHANGED', 'ARGOS_PREFERRED', 'CELLULAR_PREFERRED']
-        return options.index(x)
-
-    @staticmethod
-    def encode_depth_pile(x):
-        return DEPTHPILE.encode(x)
-
-    @staticmethod
-    def encode_arg_loc_argos(x):
-        options = [-1, 7 * 60, 15 * 60, 30 * 60, 1 * 60 * 60, 2 * 60 * 60, 3 * 60 * 60, \
-                    4 * 60 * 60, 6 * 60 * 60, 12 * 60 * 60, 24 * 60 * 60, -1, -1, -1, -1, 0]
-        return options.index(int(x))
-
-    @staticmethod
-    def encode_zone_type(x):
-        options = [-1, 'CIRCLE']
-        return options.index(x)
-
-    @staticmethod
-    def decode_zone_type(x):
-        options = [-1, 'CIRCLE']
-        return options[int(x)]
-
-    @staticmethod
-    def convert_longitude_to_float(longitude):
-        if ((float(longitude) / 20000) > 180):
-            return (float(longitude) / 20000) - 360;
-        else:
-            return float(longitude) / 20000;
-
-    @staticmethod
-    def convert_float_to_longitude(longitude):
-        if (float(longitude) < 0):
-            return int((float(longitude) + 360) * 20000)
-        else:
-            return int(float(longitude) * 20000);
-
-    @staticmethod
-    def convert_latitude_to_float(latitude):
-        return (float(latitude) / 20000) - 90;
-
-    @staticmethod
-    def convert_float_to_latitude(latitude):
-        return int((float(latitude) + 90) * 20000);
-
-    @staticmethod
-    def decode(b64_data):
-
-        zone = dotdict({})
-        packer = Packer(base64.b64decode(b64_data))
-
-        zone.zone_id = packer.extract_bits(7)
-        zone.zone_type = ZONE.decode_zone_type(packer.extract_bits(1))
-        zone.enable_monitoring = packer.extract_bits(1)
-        zone.enable_entering_leaving_events = packer.extract_bits(1)
-        zone.enable_out_of_zone_detection_mode = packer.extract_bits(1)
-        zone.enable_activation_date = packer.extract_bits(1)
-        zone.year = packer.extract_bits(5)
-        zone.year += 2020
-        zone.month = packer.extract_bits(4)
-        zone.day = packer.extract_bits(5)
-        zone.hour = packer.extract_bits(5)
-        zone.minute = packer.extract_bits(6)
-        comms_vector = packer.extract_bits(2)
-        zone.comms_vector = ZONE.decode_comms_vector(comms_vector)
-        zone.delta_arg_loc_argos_seconds = packer.extract_bits(4)
-        zone.delta_arg_loc_argos_seconds = ZONE.decode_arg_loc_argos(zone.delta_arg_loc_argos_seconds)
-        zone.delta_arg_loc_cellular_seconds = packer.extract_bits(7)  # Not used
-        zone.argos_extra_flags_enable = packer.extract_bits(1)
-        argos_depth_pile = packer.extract_bits(4)
-        zone.argos_depth_pile = DEPTHPILE.decode(argos_depth_pile)
-        zone.argos_power = ARGOSPOWER.decode(packer.extract_bits(2)+1)
-        zone.argos_time_repetition_seconds = packer.extract_bits(7)
-        zone.argos_time_repetition_seconds *= 10
-        zone.argos_mode = ARGOSMODEZONE.decode(packer.extract_bits(2))
-        zone.argos_duty_cycle = '{:06X}'.format(packer.extract_bits(24))
-        zone.gnss_extra_flags_enable = packer.extract_bits(1)
-        zone.hdop_filter_threshold = packer.extract_bits(4)
-        zone.gnss_acquisition_timeout_seconds = packer.extract_bits(8)
-        center_longitude_x = packer.extract_bits(23)
-        zone.center_longitude_x = ZONE.convert_longitude_to_float(center_longitude_x)
-        center_latitude_y = packer.extract_bits(22)
-        zone.center_latitude_y = ZONE.convert_latitude_to_float(center_latitude_y)
-        zone.radius_m = packer.extract_bits(12) * 50
-        return zone
-
-    @staticmethod
-    def encode(zone_dict):
-
-        zone = dotdict(zone_dict)
-
-        # Zero out the data buffer to the required number of bytes -- this will round up to
-        # the nearest number of bytes and zero all bytes before encoding
-        total_bits = 160
-        packer = Packer(bytearray([0] * int((total_bits + 4) / 8)))
-
-        packer.pack_bits(int(zone.zone_id), 7)
-        packer.pack_bits(ZONE.encode_zone_type(zone.zone_type), 1)
-        packer.pack_bits(int(zone.enable_monitoring), 1)
-        packer.pack_bits(int(zone.enable_entering_leaving_events), 1)
-        packer.pack_bits(int(zone.enable_out_of_zone_detection_mode), 1)
-        packer.pack_bits(int(zone.enable_activation_date), 1)
-        packer.pack_bits((int(zone.year) - 2020), 5)
-        packer.pack_bits(int(zone.month), 4)
-        packer.pack_bits(int(zone.day), 5)
-        packer.pack_bits(int(zone.hour), 5)
-        packer.pack_bits(int(zone.minute), 6)
-        packer.pack_bits(ZONE.encode_comms_vector(zone.comms_vector), 2)
-        delta_arg_loc_argos_seconds = ZONE.encode_arg_loc_argos(int(zone.delta_arg_loc_argos_seconds))
-        packer.pack_bits(delta_arg_loc_argos_seconds, 4)
-        packer.pack_bits(zone.delta_arg_loc_cellular_seconds, 7)
-        packer.pack_bits(int(zone.argos_extra_flags_enable), 1)
-        argos_depth_pile = int(DEPTHPILE.encode(zone.argos_depth_pile))
-        packer.pack_bits(argos_depth_pile, 4)
-        packer.pack_bits(int(ARGOSPOWER.encode(zone.argos_power))-1, 2)
-        packer.pack_bits(int(int(zone.argos_time_repetition_seconds) / 10), 7)
-        packer.pack_bits(int(ARGOSMODEZONE.encode(zone.argos_mode)), 2)
-        packer.pack_bits(int(zone.argos_duty_cycle, 16), 24)
-        packer.pack_bits(int(zone.gnss_extra_flags_enable), 1)
-        packer.pack_bits(int(zone.hdop_filter_threshold), 4)
-        packer.pack_bits(int(zone.gnss_acquisition_timeout_seconds), 8)
-        center_longitude_x = ZONE.convert_float_to_longitude(zone.center_longitude_x)
-        packer.pack_bits(center_longitude_x, 23)
-        center_latitude_y = ZONE.convert_float_to_latitude(zone.center_latitude_y)
-        packer.pack_bits(center_latitude_y, 22)
-        packer.pack_bits(int(int(zone.radius_m) / 50), 12)
-
-        return base64.b64encode(packer.result()).decode('ascii')
 
 
 class PASPW():

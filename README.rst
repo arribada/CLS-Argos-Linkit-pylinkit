@@ -198,32 +198,4 @@ ARGOS_DEPTH_PILE = 1
 GNSS_ACQ_TIMEOUT = 60
 ARGOS_HEXID = 4E7B54C
 
-[ZONE]   # Optional zone info for --zonew command
-zone_id = 1    # Must always be 1
-zone_type = CIRCLE
-enable_monitoring = 0
-enable_entering_leaving_events = 0
-enable_out_of_zone_detection_mode = 0
-enable_activation_date = 0
-year = 2020
-month = 1
-day = 1
-hour = 0
-minute = 0
-comms_vector = UNCHANGED
-delta_arg_loc_argos_seconds = 0
-delta_arg_loc_cellular_seconds = 0
-argos_extra_flags_enable = 0
-argos_depth_pile = 1
-argos_power = 500
-argos_time_repetition_seconds = 10
-argos_mode = OFF
-argos_duty_cycle = 000000
-gnss_extra_flags_enable = 0
-hdop_filter_threshold = 2
-gnss_acquisition_timeout_seconds = 45
-center_longitude_x = -0.0
-center_latitude_y = 0.0
-radius_m = 0
-
-A configuration should have either a [PARAM], [ZONE] or both sections.
+A configuration should have a [PARAM] section.

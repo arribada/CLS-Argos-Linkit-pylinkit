@@ -72,14 +72,6 @@ class DTE():
         resp = self._nus.send(self._encode_command('PASPW', args=[PASPW.encode(json_file_data)]), timeout=5.0)
         self._decode_response(resp)
 
-    def zonew(self, zone_dict):
-        resp = self._nus.send(self._encode_command('ZONEW', args=[ZONE.encode(zone_dict)]))
-        self._decode_response(resp)
-
-    def zoner(self, zone_id):
-        resp = self._nus.send(self._encode_command('ZONER', args=[str(zone_id)]))
-        return ZONE.decode(self._decode_response(resp))
-
     def erase(self, log_type):
         resp = self._nus.send(self._encode_command('ERASE', args=[str(log_type)]))
         self._decode_response(resp)
