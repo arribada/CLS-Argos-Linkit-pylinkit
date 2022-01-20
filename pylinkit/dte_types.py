@@ -131,6 +131,18 @@ class ARGOSMODEZONE():
         return ARGOSMODEZONE.allowed[int(value)]
 
 
+class ARGOSMODULATION():
+    allowed = ['A2', 'A3', 'A4']
+
+    @staticmethod
+    def encode(value):
+        return str(ARGOSMODULATION.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return ARGOSMODULATION.allowed[int(value)]
+
+
 class DEPTHPILE():
     allowed = [-1,1,2,3,4,-1,-1,-1,8,12,16,20,24]
 
@@ -168,7 +180,7 @@ class LEDMODE():
 
 
 class ZONETYPE():
-    allowed = ['CIRCLE']
+    allowed = [-1, 'CIRCLE']
 
     @staticmethod
     def encode(value):

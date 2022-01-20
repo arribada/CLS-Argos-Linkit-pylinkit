@@ -1,6 +1,6 @@
 from .dte_nus import DTENUS
 from .dte_params import DTEParamMap
-from .dte_types import BASE64, ZONE, PASPW
+from .dte_types import BASE64, PASPW
 import re
 import logging
 
