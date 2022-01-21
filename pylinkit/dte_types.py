@@ -52,6 +52,16 @@ class TEXT():
         return value
 
 
+class UPPERCASETEXT():
+    @staticmethod
+    def encode(value):
+        return value.upper()
+
+    @staticmethod
+    def decode(value):
+        return value.upper()
+
+
 class ARGOSDUTYCYLE():
     @staticmethod
     def encode(value):
