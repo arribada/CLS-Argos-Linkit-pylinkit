@@ -106,7 +106,19 @@ class ARGOSFREQ():
 
 
 class ARGOSPOWER():
-    allowed = [-1, 3, 4, 200, 500]
+    """
+    POWER_3_MW = 1,
+    POWER_40_MW,
+    POWER_200_MW,
+    POWER_500_MW,
+    POWER_5_MW,
+    POWER_50_MW,
+    POWER_350_MW,
+    POWER_750_MW,
+    POWER_1000_MW,
+    POWER_1500_MW
+    """
+    allowed = [-1, 3, 40, 200, 500, 5, 50, 350, 750, 1000, 1500]
 
     @staticmethod
     def encode(value):

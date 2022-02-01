@@ -4,6 +4,7 @@ class DTEParamMap():
     param_map = [
     [ "DEVICE_MODEL", "IDT02", TEXT ],
     [ "FW_APP_VERSION", "IDT03", TEXT ],
+    [ "HW_VERSION", "IDT04", TEXT ],
     [ "LAST_TX", "ART01", DATESTRING ],
     [ "TX_COUNTER", "ART02", UINT ],
     [ "BATT_SOC", "POT03", UINT ],
