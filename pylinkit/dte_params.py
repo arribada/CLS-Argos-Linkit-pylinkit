@@ -9,6 +9,7 @@ class DTEParamMap():
     [ "TX_COUNTER", "ART02", UINT ],
     [ "BATT_SOC", "POT03", UINT ],
     [ "LAST_FULL_CHARGE_DATE", "POT05", DATESTRING ],
+    [ "BATT_VOLTAGE", "POT06", FLOAT ],
     [ "PROFILE_NAME", "IDP11", TEXT ],
     [ "ARGOS_DECID", "IDP12", UINT ],
     [ "ARGOS_HEXID", "IDT06", TEXT ],
