@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pylinkit',
-    version='1.0.0',
+    version='1.0.1',
     description='Python LinkIt BLE configuration tool',
     author='Liam Wickins',
     author_email='liam@icoteq.com',
