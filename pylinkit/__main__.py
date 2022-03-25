@@ -110,7 +110,7 @@ def main():
         scan_dev = BLEDevice()
         result = scan_dev.scan()
         for x in result:
-            if ('Linkit' in x.name):
+            if ('Linkit' in x.name or 'Horizon' in x.name):
                 print(x.address, x.name)
 
 

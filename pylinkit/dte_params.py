@@ -89,6 +89,8 @@ class DTEParamMap():
     [ "CERT_TX_PAYLOAD", "CTP02", UPPERCASETEXT ],
     [ "CERT_TX_MODULATION", "CTP03", ARGOSMODULATION ],
     [ "CERT_TX_REPETITION", "CTP04", UINT ],
+    [ "DEVICE_DECID", "IDT10", UINT ],
+    [ "GNSS_TRIGGER_ON_SURFACED", "GNP25", BOOLEAN ],
     ]
 
     @staticmethod
