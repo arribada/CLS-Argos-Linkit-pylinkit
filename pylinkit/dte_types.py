@@ -129,6 +129,18 @@ class ARGOSPOWER():
         return ARGOSPOWER.allowed[int(value)]
 
 
+class UWDETECTSOURCE():
+    allowed = ['SWS', 'PRESSURE_SENSOR']
+
+    @staticmethod
+    def encode(value):
+        return str(UWDETECTSOURCE.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return UWDETECTSOURCE.allowed[int(value)]
+
+
 class ARGOSMODE():
     allowed = ['OFF', 'PASS_PREDICTION', 'LEGACY', 'DUTY_CYCLE']
 
@@ -178,7 +190,7 @@ class DEPTHPILE():
 
 
 class AQPERIOD():
-    allowed = [-1,10,15,30,60,120,360,720,1440]
+    allowed = [0,10,15,30,60,120,360,720,1440]
 
     @staticmethod
     def encode(value):
