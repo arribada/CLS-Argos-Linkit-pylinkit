@@ -5,7 +5,8 @@ import sys
 import pylinkit
 from .ble import BLEDevice
 
-erase_options = ['sensor', 'system', 'all']
+erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd' 'cdt']
+dumpd_options = ['system', 'gnss', 'als', 'ph', 'rtd', 'cdt']
 resetv_options = {'tx_counter': 1, 'rx_counter': 3, 'rx_time': 4}
 
 parser = argparse.ArgumentParser()
@@ -23,6 +24,8 @@ parser.add_argument('--scan', action='store_true', required=False, help='Scan fo
 parser.add_argument('--debug', action='store_true', required=False, help='Turn on debug trace')
 parser.add_argument('--dump_sensor', type=argparse.FileType('wb'), required=False, help='Dump sensor log file')
 parser.add_argument('--dump_system', type=argparse.FileType('wb'), required=False, help='Dump system log file')
+parser.add_argument('--dumpd', type=argparse.FileType('wb'), required=False, help='Dump the specified log file')
+parser.add_argument('--dumpd_type', type=str, choices=dumpd_options, required=False, help='Specified log file')
 args = parser.parse_args()
 
 
@@ -90,6 +93,10 @@ def main():
     if args.dump_system:
         args.dump_system.write(dev.dumpd('system'))
         args.dump_system.close()
+
+    if args.dumpd and args.dumpd_type:
+        args.dumpd.write(dev.dumpd(args.dumpd_type))
+        args.dumpd.close()
 
     if args.erase:
         dev.erase(erase_options.index(args.erase) + 1)
