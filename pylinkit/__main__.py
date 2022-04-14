@@ -99,7 +99,7 @@ def main():
         dev.erase(erase_options.index(args.erase) + 1)
 
     if args.fw:
-        if (args.fw.endswith('.zip')):
+        if (args.fw.name.endswith('.zip')):
             dev.firmware_update(extract_firmware_file_from_dfu(args.fw), 0, args.timeout)
         else:
             dev.firmware_update(args.fw.read(), 0, args.timeout)

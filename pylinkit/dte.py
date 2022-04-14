@@ -93,3 +93,13 @@ class DTE():
     def rstbw(self):
         resp = self._nus.send(self._encode_command('RSTBW'))
         self._decode_response(resp)
+
+    def scalw(self, sensor, step, value):
+        sensor_d = {'axl': 0,
+                    'pressure': 1,
+                    'als': 2,
+                    'ph': 3,
+                    'rtd': 4,
+                    'cdt': 5 }
+        resp = self._nus.send(self._encode_command('SCALW', args=[str(sensor_d[sensor]), str(step), str(value)]))
+        self._decode_response(resp)

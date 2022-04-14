@@ -55,7 +55,7 @@ class Tracker():
         self._dte.rstbw()
 
     def deplw(self):
-        raise Exception('Not yet implemented')
+        self._dte.rstbw()
 
     def scalw(self, sensor, step, value=0):
-        raise Exception('Not yet implemented')
+        self._dte.scalw(sensor, step, value)
