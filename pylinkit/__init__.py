@@ -2,7 +2,16 @@ from .ble import BLEDevice
 from .dte import DTE
 from .ota_fw import OTAFW
 
-class GenTracker():
+
+class Scanner():
+    def __init__(self):
+        self._device = BLEDevice()
+
+    def scan(self):
+        return [x for x in self._device.scan() if ('Linkit' in x.name or 'Horizon' in x.name)]
+
+
+class Tracker():
     def __init__(self, address):
         self._device = BLEDevice()
         self._device.connect(address, 5)
@@ -44,3 +53,9 @@ class GenTracker():
 
     def rstbw(self):
         self._dte.rstbw()
+
+    def deplw(self):
+        raise Exception('Not yet implemented')
+
+    def scalw(self, sensor, step, value=0):
+        raise Exception('Not yet implemented')

@@ -13,7 +13,6 @@ setup(
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
@@ -22,7 +21,8 @@ setup(
     install_requires=[
         'service_identity',
         'pyasn1',
-        'bleak'
+        'bleak',
+        'kivy',
     ],
     extras_require={},
     entry_points={

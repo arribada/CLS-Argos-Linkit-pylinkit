@@ -1,9 +1,8 @@
 import logging
 import argparse
-import configparser
 import sys
 import pylinkit
-from .ble import BLEDevice
+from .utils import OrderedRawConfigParser, extract_firmware_file_from_dfu
 
 erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd' 'cdt']
 dumpd_options = ['system', 'gnss', 'als', 'ph', 'rtd', 'cdt']
@@ -26,18 +25,8 @@ parser.add_argument('--dump_sensor', type=argparse.FileType('wb'), required=Fals
 parser.add_argument('--dump_system', type=argparse.FileType('wb'), required=False, help='Dump system log file')
 parser.add_argument('--dumpd', type=argparse.FileType('wb'), required=False, help='Dump the specified log file')
 parser.add_argument('--dumpd_type', type=str, choices=dumpd_options, required=False, help='Specified log file')
+parser.add_argument('--gui', action='store_true', required=False, help='Launch in GUI mode')
 args = parser.parse_args()
-
-
-class OrderedRawConfigParser(configparser.RawConfigParser):
-    def write(self, fp):
-        for section in self._sections:
-            fp.write("[%s]\n" % section)
-            for key in sorted( self._sections[section] ): 
-                if key != "__name__":
-                    fp.write("%s = %s\n" %
-                             (key, str( self._sections[section][ key ] ).replace('\n', '\n\t')))    
-            fp.write("\n")    
 
 
 def setup_logging(enabled, level):
@@ -53,6 +42,11 @@ def setup_logging(enabled, level):
             logging.getLogger().setLevel(logging.DEBUG)
 
 
+def gui_main():
+    from .gui import run
+    run()
+
+
 def main():
     if not any(vars(args).values()):
         parser.print_help()
@@ -63,9 +57,12 @@ def main():
     else:
         setup_logging(True, 'info')
 
+    if args.gui:
+        gui_main()
+
     dev = None
     if args.device:
-        dev = pylinkit.GenTracker(args.device)
+        dev = pylinkit.Tracker(args.device)
 
     if args.parmr:
         dev.sync()
@@ -102,7 +99,10 @@ def main():
         dev.erase(erase_options.index(args.erase) + 1)
 
     if args.fw:
-        dev.firmware_update(args.fw.read(), 0, args.timeout)
+        if (args.fw.endswith('.zip')):
+            dev.firmware_update(extract_firmware_file_from_dfu(args.fw), 0, args.timeout)
+        else:
+            dev.firmware_update(args.fw.read(), 0, args.timeout)
 
     if args.factw:
         dev.factw()
@@ -114,11 +114,10 @@ def main():
         dev.rstbw()
 
     if args.scan:
-        scan_dev = BLEDevice()
+        scan_dev = pylinkit.Scanner()
         result = scan_dev.scan()
         for x in result:
-            if ('Linkit' in x.name or 'Horizon' in x.name):
-                print(x.address, x.name)
+            print(x.address, x.name)
 
 
 if __name__ == "__main__":
