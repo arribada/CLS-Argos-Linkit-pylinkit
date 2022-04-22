@@ -4,7 +4,7 @@ import sys
 import pylinkit
 from .utils import OrderedRawConfigParser, extract_firmware_file_from_dfu
 
-erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd' 'cdt', 'axl', 'pressure']
+erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
 dumpd_options = ['system', 'gnss', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
 scalw_options = ['cdt', 'ph', 'rtd']
 resetv_options = {'tx_counter': 1, 'rx_counter': 3, 'rx_time': 4}
@@ -100,7 +100,7 @@ def main():
         args.dumpd.close()
 
     if args.erase:
-        dev.erase(erase_options.index(args.erase) + 1)
+        dev.erase(args.erase)
 
     if args.fw:
         if (args.fw.name.endswith('.zip')):

@@ -81,7 +81,16 @@ class DTE():
         self._decode_response(resp)
 
     def erase(self, log_type):
-        resp = self._nus.send(self._encode_command('ERASE', args=[str(log_type)]))
+        log_d = {'all': 3,
+                 'sensor': 1,
+                 'gnss': 1,
+                 'als': 4,
+                 'ph': 5,
+                 'rtd': 6,
+                 'cdt': 7,
+                 'axl': 8,
+                 'pressure': 9 }
+        resp = self._nus.send(self._encode_command('ERASE', args=['{}'.format(log_d[log_type])]))
         self._decode_response(resp)
 
     def factw(self):
