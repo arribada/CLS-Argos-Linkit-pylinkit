@@ -213,6 +213,18 @@ class LEDMODE():
         return LEDMODE.allowed[int(value)]
 
 
+class DEBUGMODE():
+    allowed = ['UART', 'BLE']
+
+    @staticmethod
+    def encode(value):
+        return str(DEBUGMODE.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return DEBUGMODE.allowed[int(value)]
+
+
 class ZONETYPE():
     allowed = [-1, 'CIRCLE']
 

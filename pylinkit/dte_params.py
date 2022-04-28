@@ -115,6 +115,7 @@ class DTEParamMap():
     [ "AXL_SENSOR_WAKEUP_SAMPLES", "AXP04", UINT ],
     [ "PRESSURE_SENSOR_ENABLE", "PRP01", BOOLEAN ],
     [ "PRESSURE_SENSOR_PERIODIC", "PRP02", UINT ],
+    [ "DEBUG_OUTPUT_MODE", "DBP01", DEBUGMODE ],
     ]
 
     @staticmethod
