@@ -2,7 +2,7 @@ import logging
 import argparse
 import sys
 import pylinkit
-from .utils import OrderedRawConfigParser, extract_firmware_file_from_dfu
+from .utils import OrderedRawConfigParser, extract_firmware_file_from_dfu, create_wrapped_file_with_crc32
 
 erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
 dumpd_options = ['system', 'gnss', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
@@ -30,6 +30,7 @@ parser.add_argument('--gui', action='store_true', required=False, help='Launch i
 parser.add_argument('--scalw', type=str, choices=scalw_options, required=False, help='Run a calibration command')
 parser.add_argument('--command', type=int, required=False, help='Calibration command number')
 parser.add_argument('--value', type=float, default=0, required=False, help='Calibration command value')
+parser.add_argument('--ano', type=argparse.FileType('rb'), required=False, help='GNSS AssistNow Offline filename')
 args = parser.parse_args()
 
 
@@ -107,6 +108,9 @@ def main():
             dev.firmware_update(extract_firmware_file_from_dfu(args.fw), 0, args.timeout)
         else:
             dev.firmware_update(args.fw.read(), 0, args.timeout)
+
+    if args.ano:
+        dev.firmware_update(create_wrapped_file_with_crc32(args.ano.read()), 2, args.timeout)
 
     if args.factw:
         dev.factw()

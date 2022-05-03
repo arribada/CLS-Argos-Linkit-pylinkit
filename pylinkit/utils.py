@@ -23,6 +23,10 @@ def extract_params_from_config_file(file):
         return cfg['PARAM']
 
 
+def create_wrapped_file_with_crc32(bin_data):
+    return struct.pack('>II', len(bin_data), binascii.crc32(bin_data)) + bin_data
+
+
 def extract_firmware_file_from_dfu(file):
     zf = zipfile.ZipFile(file, mode='r')
     files = zf.namelist()
@@ -44,4 +48,4 @@ def extract_firmware_file_from_dfu(file):
     # First 4 bytes are the image size
     # Next 4 bytes is a CRC32 computed over image data
     # Image data then follows
-    return struct.pack('>II', len(bin_data), binascii.crc32(bin_data)) + bin_data
+    return create_wrapped_file_with_crc32(bin_data)
