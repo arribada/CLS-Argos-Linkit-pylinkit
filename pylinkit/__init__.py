@@ -59,3 +59,6 @@ class Tracker():
 
     def scalw(self, sensor, step, value=0):
         self._dte.scalw(sensor, step, value)
+
+    def argostx(self, mod, power, freq, size, tcxo):
+        self._dte.argostx(mod, power, freq, size, tcxo)

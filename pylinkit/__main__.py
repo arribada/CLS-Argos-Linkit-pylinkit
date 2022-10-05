@@ -6,8 +6,10 @@ from .utils import OrderedRawConfigParser, extract_firmware_file_from_dfu, creat
 
 erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
 dumpd_options = ['system', 'gnss', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
-scalw_options = ['cdt', 'ph', 'rtd']
+scalw_options = ['cdt', 'ph', 'rtd', 'mcp47x6']
 resetv_options = {'tx_counter': 1, 'rx_counter': 3, 'rx_time': 4}
+modulation_options = {'A2':0, 'A3': 1, 'A4': 2}
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--fw', type=argparse.FileType('rb'), required=False, help='Firmware filename for FW OTA update')
@@ -27,6 +29,12 @@ parser.add_argument('--dump_system', type=argparse.FileType('wb'), required=Fals
 parser.add_argument('--dumpd', type=argparse.FileType('wb'), required=False, help='Dump the specified log file')
 parser.add_argument('--dumpd_type', type=str, choices=dumpd_options, required=False, help='Specified log file')
 parser.add_argument('--gui', action='store_true', required=False, help='Launch in GUI mode')
+parser.add_argument('--argostx', action='store_true', required=False, help='Send argos TX packet')
+parser.add_argument('--argosmod', type=str, default='A2', required=False, help='Argos modulation (A2, A3)')
+parser.add_argument('--argosfreq', type=float, default=401.65, required=False, help='Argos frequency in MHz')
+parser.add_argument('--argossize', type=int, default=15, required=False, help='Packet size in bytes')
+parser.add_argument('--argostcxo', type=int, default=5, required=False, help='TCXO warm-up in seconds')
+parser.add_argument('--argospower', type=int, default=350, required=False, help='TX power in mW')
 parser.add_argument('--scalw', type=str, choices=scalw_options, required=False, help='Run a calibration command')
 parser.add_argument('--command', type=int, required=False, help='Calibration command number')
 parser.add_argument('--value', type=float, default=0, required=False, help='Calibration command value')
@@ -146,10 +154,22 @@ def main():
 
             --scalw rtd --command 0 ; reset RTD calibration
             --scalw rtd --command 1 ; perform 0C calibration
+            
+            mcp47x6::
+
+            --scalw mcp47x6 --command 0 ; reset mcp47x6 calibration
+            --scalw mcp47x6 --command 350 --value 2345 ; calibration point for DAC for 350 mW power
+            --scalw mcp47x6 --command 500 --value 2645 ; calibration point for DAC for 500 mW power
+            --scalw mcp47x6 --command 1 ; save mcp47x6 calibration to file
+            
+            Note: use in conjunction with --argostx to send a packet at calibrated mW
 
             """)
             return
         dev.scalw(args.scalw, args.command, args.value)
+
+    if args.argostx:
+        dev.argostx(args.argosmod, args.argospower, args.argosfreq, args.argossize, args.argostcxo)
 
     if args.scan:
         scan_dev = pylinkit.Scanner()
