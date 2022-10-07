@@ -82,6 +82,7 @@ class DTE():
 
     def erase(self, log_type):
         log_d = {'all': 3,
+                 'system': 2,
                  'sensor': 1,
                  'gnss': 1,
                  'als': 4,
