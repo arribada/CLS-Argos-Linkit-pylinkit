@@ -62,7 +62,7 @@ class BLEDevice(object):
         await self._scanner.start()
         await asyncio.sleep(interval)
         await self._scanner.stop()
-        return await self._scanner.get_discovered_devices()
+        return self._scanner.discovered_devices
 
     async def _connect_async(self, address, timeout: float):
         if self._connection_client is not None:
