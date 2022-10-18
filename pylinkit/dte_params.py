@@ -117,7 +117,7 @@ class DTEParamMap():
     [ "PRESSURE_SENSOR_PERIODIC", "PRP02", UINT ],
     [ "DEBUG_OUTPUT_MODE", "DBP01", DEBUGMODE ],
     [ "GNSS_ASSISTNOW_OFFLINE_EN", "GNP27", BOOLEAN ],
-    [ "WCHG_STATUS", "WCG01", TEXT ],
+    [ "WCHG_STATUS", "WCT01", TEXT ],
     ]
 
     @staticmethod
