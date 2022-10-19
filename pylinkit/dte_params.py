@@ -118,6 +118,10 @@ class DTEParamMap():
     [ "DEBUG_OUTPUT_MODE", "DBP01", DEBUGMODE ],
     [ "GNSS_ASSISTNOW_OFFLINE_EN", "GNP27", BOOLEAN ],
     [ "WCHG_STATUS", "WCT01", TEXT ],
+    [ "UW_MAX_SAMPLES", "UNP05", UINT ],
+    [ "UW_MIN_DRY_SAMPLES", "UNP06", UINT ],
+    [ "UW_SAMPLE_GAP", "UNP07", UINT ],
+    [ "UW_PIN_SAMPLE_DELAY", "UNP08", UINT ],    
     ]
 
     @staticmethod
