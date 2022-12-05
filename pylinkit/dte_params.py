@@ -121,7 +121,9 @@ class DTEParamMap():
     [ "UW_MAX_SAMPLES", "UNP05", UINT ],
     [ "UW_MIN_DRY_SAMPLES", "UNP06", UINT ],
     [ "UW_SAMPLE_GAP", "UNP07", UINT ],
-    [ "UW_PIN_SAMPLE_DELAY", "UNP08", UINT ],    
+    [ "UW_PIN_SAMPLE_DELAY", "UNP08", UINT ],
+    [ "UW_DIVE_MODE_ENABLE", "UNP12", BOOLEAN ],
+    [ "UW_DIVE_MODE_START_TIME", "UNP13", UINT ],    
     ]
 
     @staticmethod
