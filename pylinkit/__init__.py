@@ -8,7 +8,7 @@ class Scanner():
         self._device = BLEDevice()
 
     def scan(self):
-        return [x for x in self._device.scan() if ('Linkit' in x.name or 'Horizon' in x.name)]
+        return [x for x in self._device.scan() if (x.name and ('Linkit' in x.name or 'Horizon' in x.name))]
 
 
 class Tracker():
