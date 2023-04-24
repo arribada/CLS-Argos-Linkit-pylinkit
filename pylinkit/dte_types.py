@@ -130,7 +130,7 @@ class ARGOSPOWER():
 
 
 class UWDETECTSOURCE():
-    allowed = ['SWS', 'PRESSURE_SENSOR', 'GNSS']
+    allowed = ['SWS', 'PRESSURE_SENSOR', 'GNSS', 'SWS_GNSS']
 
     @staticmethod
     def encode(value):

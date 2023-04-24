@@ -123,7 +123,12 @@ class DTEParamMap():
     [ "UW_SAMPLE_GAP", "UNP07", UINT ],
     [ "UW_PIN_SAMPLE_DELAY", "UNP08", UINT ],
     [ "UW_DIVE_MODE_ENABLE", "UNP12", BOOLEAN ],
-    [ "UW_DIVE_MODE_START_TIME", "UNP13", UINT ],    
+    [ "UW_DIVE_MODE_START_TIME", "UNP13", UINT ],
+    [ "UW_GNSS_DRY_SAMPLING", "UNP14", UINT ],
+    [ "UW_GNSS_WET_SAMPLING", "UNP15", UINT ],
+    [ "UW_GNSS_MAX_SAMPLES", "UNP16", UINT ],
+    [ "UW_GNSS_MIN_DRY_SAMPLES", "UNP17", UINT ],
+    [ "UW_GNSS_DETECT_THRESH", "UNP18", UINT ],
     ]
 
     @staticmethod
