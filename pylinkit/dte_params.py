@@ -129,6 +129,7 @@ class DTEParamMap():
     [ "UW_GNSS_MAX_SAMPLES", "UNP16", UINT ],
     [ "UW_GNSS_MIN_DRY_SAMPLES", "UNP17", UINT ],
     [ "UW_GNSS_DETECT_THRESH", "UNP18", UINT ],
+    [ "LB_CRITICAL_THRESH", "LBP12", FLOAT ],
     ]
 
     @staticmethod
