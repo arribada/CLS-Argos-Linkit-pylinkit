@@ -225,6 +225,18 @@ class DEBUGMODE():
         return DEBUGMODE.allowed[int(value)]
 
 
+class PRESSURESENSORLOGGINGMODE():
+    allowed = ['ALWAYS', 'UW_THRESHOLD']
+
+    @staticmethod
+    def encode(value):
+        return str(PRESSURESENSORLOGGINGMODE.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return PRESSURESENSORLOGGINGMODE.allowed[int(value)]
+
+
 class ZONETYPE():
     allowed = [-1, 'CIRCLE']
 
