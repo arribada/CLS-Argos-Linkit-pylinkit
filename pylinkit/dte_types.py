@@ -141,6 +141,18 @@ class UWDETECTSOURCE():
         return UWDETECTSOURCE.allowed[int(value)]
 
 
+class SENSORTXENABLEMODE():
+    allowed = ['OFF', 'ONESHOT', 'MEAN', 'MEDIAN']
+
+    @staticmethod
+    def encode(value):
+        return str(SENSORTXENABLEMODE.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return SENSORTXENABLEMODE.allowed[int(value)]
+
+
 class ARGOSMODE():
     allowed = ['OFF', 'PASS_PREDICTION', 'LEGACY', 'DUTY_CYCLE']
 
