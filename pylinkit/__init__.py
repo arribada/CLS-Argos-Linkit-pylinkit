@@ -62,3 +62,8 @@ class Tracker():
 
     def argostx(self, mod, power, freq, size, tcxo):
         self._dte.argostx(mod, power, freq, size, tcxo)
+
+    def poll(self, key, repetitions=1):
+        for i in range(repetitions):
+            result = self._dte.parmr([key])
+            print(result)

@@ -17,6 +17,7 @@ parser.add_argument('--timeout', type=float, required=False, default=None, help=
 parser.add_argument('--erase', type=str, choices=erase_options, required=False, help='Erase log file')
 parser.add_argument('--device', type=str, required=False, help='xx:xx:xx:xx:xx:xx BLE device address')
 parser.add_argument('--parmr', type=argparse.FileType('w'), required=False, help='Filename to write [PARAM] configuration to')
+parser.add_argument('--poll', type=str, required=False, help='Poll a parameter value by key and use --value to denote repetitions')
 parser.add_argument('--rstvw', type=str, choices=resetv_options.keys(), required=False, help='Reset variable: tx_counter or rx_counter')
 parser.add_argument('--rstbw', action='store_true', required=False, help='Reset beacon')
 parser.add_argument('--factw', action='store_true', required=False, help='Factory reset (WARNING: erases all stored logs and configuration!)')
@@ -87,6 +88,9 @@ def main():
         cfg.write(args.parmr)
         args.parmr.close()
 
+    if args.poll and args.value is not None:
+        dev.poll(args.poll, int(args.value))
+
     if args.parmw:
         cfg = OrderedRawConfigParser()
         cfg.optionxform = lambda option: option
@@ -152,16 +156,18 @@ def main():
 
             rtd::
 
-            --scalw rtd --command 0 ; reset RTD calibration
+            --scalw rtd --command 0 ; reset RTD calibration, wakeup device
             --scalw rtd --command 1 ; perform 0C calibration
-            
+            --scalw rtd --command 2 ; perform 100C calibration
+            --scalw rtd --command 3 ; put device back into sleep mode
+
             mcp47x6::
 
             --scalw mcp47x6 --command 0 ; reset mcp47x6 calibration
             --scalw mcp47x6 --command 350 --value 2345 ; calibration point for DAC for 350 mW power
             --scalw mcp47x6 --command 500 --value 2645 ; calibration point for DAC for 500 mW power
             --scalw mcp47x6 --command 1 ; save mcp47x6 calibration to file
-            
+
             Note: use in conjunction with --argostx to send a packet at calibrated mW
 
             """)
