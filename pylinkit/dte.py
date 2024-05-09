@@ -117,6 +117,17 @@ class DTE():
         resp = self._nus.send(self._encode_command('SCALW', args=[str(sensor_d[sensor]), str(step), str(value)]))
         self._decode_response(resp)
 
+    def scalr(self, sensor, step):
+        sensor_d = {'axl': 0,
+                    'pressure': 1,
+                    'als': 2,
+                    'ph': 3,
+                    'rtd': 4,
+                    'cdt': 5,
+                    'mcp47x6': 6 }
+        resp = self._nus.send(self._encode_command('SCALR', args=[str(sensor_d[sensor]), str(step)]))
+        return self._decode_response(resp)
+
     def argostx(self, mod, power, freq, size, tcxo):
         mod_d = {'A2': 0,
                  'A3': 1,

@@ -7,6 +7,7 @@ from .utils import OrderedRawConfigParser, extract_firmware_file_from_dfu, creat
 erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
 dumpd_options = ['system', 'gnss', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
 scalw_options = ['cdt', 'ph', 'rtd', 'mcp47x6']
+scalr_options = ['cdt']
 resetv_options = {'tx_counter': 1, 'rx_counter': 3, 'rx_time': 4}
 modulation_options = {'A2':0, 'A3': 1, 'A4': 2}
 
@@ -36,7 +37,8 @@ parser.add_argument('--argosfreq', type=float, default=401.65, required=False, h
 parser.add_argument('--argossize', type=int, default=15, required=False, help='Packet size in bytes')
 parser.add_argument('--argostcxo', type=int, default=5, required=False, help='TCXO warm-up in seconds')
 parser.add_argument('--argospower', type=int, default=350, required=False, help='TX power in mW')
-parser.add_argument('--scalw', type=str, choices=scalw_options, required=False, help='Run a calibration command')
+parser.add_argument('--scalw', type=str, choices=scalw_options, required=False, help='Run a calibration write command')
+parser.add_argument('--scalr', type=str, choices=scalr_options, required=False, help='Run a calibration read command')
 parser.add_argument('--command', type=int, required=False, help='Calibration command number')
 parser.add_argument('--value', type=float, default=0, required=False, help='Calibration command value')
 parser.add_argument('--ano', type=argparse.FileType('rb'), required=False, help='GNSS AssistNow Offline filename')
@@ -141,11 +143,13 @@ def main():
             cdt::
 
             --scalw cdt --command 0 ; to reset existing CDT calibration
-            --scalw cdt --command 1 --value 200000 ; to measure and compute gain factor for 200K
             --scalw cdt --command 2 --value xxxx ; to override CA polynomial coefficient
             --scalw cdt --command 3 --value xxxx ; to override CB polynomial coefficient
             --scalw cdt --command 4 --value xxxx ; to override CC polynomial coefficient
             --scalw cdt --command 5 ; to save all CDT calibration values to filesystem
+            --scalw cdt --command 6 --value xxxx ; set gain factor calibration value
+            --scalw cdt --command 7 --value xxxx; power on and configure AD9533 for sweep @ frequency xxxx
+            --scalw cdt --command 8 ; power off AD9533
 
             ph::
 
@@ -173,6 +177,25 @@ def main():
             """)
             return
         dev.scalw(args.scalw, args.command, args.value)
+
+    if args.scalr:
+        if args.command is None:
+            print("""
+            Calibration requires a command.  Use --command to provide a command:
+
+            cdt::
+
+            --scalr cdt --command 0 ; read CA polynomial coefficient
+            --scalr cdt --command 1 ; read CB polynomial coefficient
+            --scalr cdt --command 2 ; read CC polynomial coefficient
+            --scalr cdt --command 3 ; read gain factor
+            --scalr cdt --command 4 ; read AD5933 raw sensor real value
+            --scalr cdt --command 5 ; read AD5933 raw sensor imaginary value
+            --scalr cdt --command 6 ; read impedence value using stored calibrated gain factor
+                                    ; note: must use --scalw --command 6 --value xxx first
+            """)
+            return
+        print(dev.scalr(args.scalr, args.command))
 
     if args.argostx:
         dev.argostx(args.argosmod, args.argospower, args.argosfreq, args.argossize, args.argostcxo)
