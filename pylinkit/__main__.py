@@ -2,6 +2,7 @@ import logging
 import argparse
 import sys
 import pylinkit
+import pkg_resources
 from .utils import OrderedRawConfigParser, extract_firmware_file_from_dfu, create_wrapped_file_with_crc32
 
 erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
@@ -42,6 +43,8 @@ parser.add_argument('--scalr', type=str, choices=scalr_options, required=False, 
 parser.add_argument('--command', type=int, required=False, help='Calibration command number')
 parser.add_argument('--value', type=float, default=0, required=False, help='Calibration command value')
 parser.add_argument('--ano', type=argparse.FileType('rb'), required=False, help='GNSS AssistNow Offline filename')
+parser.add_argument('--version', action='store_true', required=False, help='Show the version number and exit')
+
 args = parser.parse_args()
 
 
@@ -67,6 +70,11 @@ def main():
     if not any(vars(args).values()):
         parser.print_help()
         sys.exit(2)
+
+    if args.version:
+      version = pkg_resources.get_distribution("pylinkit").version
+      print(f"Version: {version}")
+      sys.exit(0)
 
     if args.debug:
         setup_logging(True, 'debug')
