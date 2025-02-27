@@ -5,12 +5,12 @@ import pylinkit
 import pkg_resources
 from .utils import OrderedRawConfigParser, extract_firmware_file_from_dfu, create_wrapped_file_with_crc32
 
-erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
-dumpd_options = ['system', 'gnss', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure']
+erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure', 'thermistor']
+dumpd_options = ['system', 'gnss', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure', 'thermistor']
 scalw_options = ['cdt', 'ph', 'rtd', 'mcp47x6']
 scalr_options = ['cdt']
 resetv_options = {'tx_counter': 1, 'rx_counter': 3, 'rx_time': 4}
-modulation_options = {'A2':0, 'A3': 1, 'A4': 2}
+modulation_options = {'A2':0, 'A3': 1, 'A4': 2, 'VLDA4': 3, 'LDK':4, 'LDA2':5, 'LDA2L':6}
 
 
 parser = argparse.ArgumentParser()
@@ -32,8 +32,13 @@ parser.add_argument('--dump_system', type=argparse.FileType('wb'), required=Fals
 parser.add_argument('--dumpd', type=argparse.FileType('wb'), required=False, help='Dump the specified log file')
 parser.add_argument('--dumpd_type', type=str, choices=dumpd_options, required=False, help='Specified log file')
 parser.add_argument('--gui', action='store_true', required=False, help='Launch in GUI mode')
+parser.add_argument('--smdcd', action='store_true', required=False, help='Send Credentials informations to SMD flash memory (ID, ADDR, and Secret Key, radio conf)')
+parser.add_argument('--smdid', type=str, default='', required=False, help='Write Decimal ID to SMD flash Decimal and internal conf')
+parser.add_argument('--smdaddr', type=str, default='', required=False, help='Write hexadecimal adress to SMD flash and internal conf')
+parser.add_argument('--smdseckey', type=str, default='', required=False, help='Write Secret key to SMD flash and internal conf')
+parser.add_argument('--smdradioconf', type=str, default='', required=False, help='Write radio configuration to SMD flash and internal conf')
 parser.add_argument('--argostx', action='store_true', required=False, help='Send argos TX packet')
-parser.add_argument('--argosmod', type=str, default='A2', required=False, help='Argos modulation (A2, A3)')
+parser.add_argument('--argosmod', type=str, default='A2', required=False, help='Argos/Kineis modulation (A2, A3)')
 parser.add_argument('--argosfreq', type=float, default=401.65, required=False, help='Argos frequency in MHz')
 parser.add_argument('--argossize', type=int, default=15, required=False, help='Packet size in bytes')
 parser.add_argument('--argostcxo', type=int, default=5, required=False, help='TCXO warm-up in seconds')
@@ -207,6 +212,9 @@ def main():
 
     if args.argostx:
         dev.argostx(args.argosmod, args.argospower, args.argosfreq, args.argossize, args.argostcxo)
+
+    if args.smdcd:
+        dev.smdcd(args.smdid, args.smdaddr, args.smdseckey, args.smdradioconf)
 
     if args.scan:
         scan_dev = pylinkit.Scanner()

@@ -1,4 +1,4 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: pylinkit
 Version: 3.4.2
 Summary: Python LinkIt BLE configuration tool
@@ -16,3 +16,9 @@ Requires-Dist: service_identity
 Requires-Dist: pyasn1
 Requires-Dist: bleak
 Requires-Dist: kivy
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary

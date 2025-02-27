@@ -66,7 +66,8 @@ class DTE():
                  'rtd': 4,
                  'cdt': 5,
                  'axl': 6,
-                 'pressure': 7 }
+                 'pressure': 7,
+                 'thermistor': 8 }
         resp = self._nus.send(self._encode_command('DUMPD', args=['{}'.format(log_d[log_type])]), multi_response=True)
         responses = self._decode_multi_response(resp)
         raw_data = b''
@@ -90,7 +91,8 @@ class DTE():
                  'rtd': 6,
                  'cdt': 7,
                  'axl': 8,
-                 'pressure': 9 }
+                 'pressure': 9,
+                 'thermistor': 10 }
         resp = self._nus.send(self._encode_command('ERASE', args=['{}'.format(log_d[log_type])]))
         self._decode_response(resp)
 
@@ -133,4 +135,8 @@ class DTE():
                  'A3': 1,
                  'A4': 2}
         resp = self._nus.send(self._encode_command('SATTX', args=[str(mod_d[mod]), str(power), str(freq), str(size), str(tcxo)]))
+        self._decode_response(resp)
+
+    def smdcd(self, id, addr, seckey, radioconf):
+        resp = self._nus.send(self._encode_command('SMDCD', args=[str(id), str(addr), str(seckey), str(radioconf)]))
         self._decode_response(resp)
