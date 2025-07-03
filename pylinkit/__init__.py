@@ -60,6 +60,9 @@ class Tracker():
     def scalw(self, sensor, step, value=0):
         self._dte.scalw(sensor, step, value)
 
+    def pwron(self, component):
+        self._dte.pwron(component)
+        
     def scalr(self, sensor, step):
         return self._dte.scalr(sensor, step)
 

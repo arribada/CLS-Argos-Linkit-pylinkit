@@ -115,19 +115,36 @@ class DTE():
                     'ph': 3,
                     'rtd': 4,
                     'cdt': 5,
-                    'mcp47x6': 6 }
+                    'mcp47x6': 6,
+                    'thermistor': 7 }
         resp = self._nus.send(self._encode_command('SCALW', args=[str(sensor_d[sensor]), str(step), str(value)]))
         self._decode_response(resp)
 
+    def pwron(self, component):
+        component_d = {'all': 0,
+                    'gnss': 1,
+                    'sensors': 2,
+                    'satellite': 3,
+                    'off': 4 }
+        #resp = self._nus.send(self._encode_command('PWRON', args=[str(component_d[component])]))
+        resp = self._nus.send(self._encode_command('PWRON', args=['{}'.format(component_d[component])]))
+        self._decode_response(resp)
+
     def scalr(self, sensor, step):
+        timeout: float = 10.0
         sensor_d = {'axl': 0,
                     'pressure': 1,
                     'als': 2,
                     'ph': 3,
                     'rtd': 4,
                     'cdt': 5,
-                    'mcp47x6': 6 }
-        resp = self._nus.send(self._encode_command('SCALR', args=[str(sensor_d[sensor]), str(step)]))
+                    'mcp47x6': 6,
+                    'thermistor': 7 }
+        if sensor == 'axl':
+            timeout = 25.0
+
+        resp = self._nus.send(self._encode_command('SCALR', args=[str(sensor_d[sensor]), str(step)]), timeout=timeout)
+        print("resp=", resp)
         return self._decode_response(resp)
 
     def argostx(self, mod, power, freq, size, tcxo):

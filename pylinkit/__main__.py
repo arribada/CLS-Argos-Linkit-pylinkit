@@ -7,10 +7,12 @@ from .utils import OrderedRawConfigParser, extract_firmware_file_from_dfu, creat
 
 erase_options = ['sensor', 'system', 'all', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure', 'thermistor']
 dumpd_options = ['system', 'gnss', 'als', 'ph', 'rtd', 'cdt', 'axl', 'pressure', 'thermistor']
-scalw_options = ['cdt', 'ph', 'rtd', 'mcp47x6']
-scalr_options = ['cdt']
+scalw_options = ['cdt', 'axl', 'ph', 'rtd', 'mcp47x6', 'thermistor']
+scalr_options = ['cdt', 'axl', 'thermistor']
 resetv_options = {'tx_counter': 1, 'rx_counter': 3, 'rx_time': 4}
 modulation_options = {'A2':0, 'A3': 1, 'A4': 2, 'VLDA4': 3, 'LDK':4, 'LDA2':5, 'LDA2L':6}
+pwr_options = ['all', 'gnss', 'sensors', 'satellite', 'off']
+
 
 
 parser = argparse.ArgumentParser()
@@ -49,6 +51,7 @@ parser.add_argument('--command', type=int, required=False, help='Calibration com
 parser.add_argument('--value', type=float, default=0, required=False, help='Calibration command value')
 parser.add_argument('--ano', type=argparse.FileType('rb'), required=False, help='GNSS AssistNow Offline filename')
 parser.add_argument('--version', action='store_true', required=False, help='Show the version number and exit')
+parser.add_argument('--pwron', type=str, choices=pwr_options, required=False, help='Power on the device (GNSS, SENSORS, SATELLITE)')
 
 args = parser.parse_args()
 
@@ -148,6 +151,19 @@ def main():
     if args.rstbw:
         dev.rstbw()
 
+    if args.pwron:
+        if args.pwron is None:
+            print("Power on requires a command. Use --command to provide a command:")
+            print("""
+            --pwron all ; to power on all devices
+            --pwron gnss; to power on GNSS
+            --pwron sensors ; to power on SENSORS
+            --pwron satellite; to power on SATELLITE
+            --pwron off; to power off all elements
+            """)
+            return
+        dev.pwron(args.pwron)
+        
     if args.scalw:
         if args.command is None:
             print("""
@@ -171,6 +187,16 @@ def main():
             --scalw ph --command 2 ; perform PH 1 (Low) calibration
             --scalw ph --command 3 ; perform PH 14 (High) calibration
 
+            axl::
+
+            --scalw axl --command 0 --value xxxx ; to override threshold value
+            --scalw axl --command 1 --value xxxx ; to override wakeup duration value
+            --scalw axl --command 2 --value xxxx ; to override wakeup gforce value
+            --scalw axl --command 3 --value xxxx ; to override power mode value
+            --scalw axl --command 4 --value xxxx ; to override x value
+            --scalw axl --command 5 --value xxxx ; to override y value
+            --scalw axl --command 6 --value xxxx ; to override z value
+
             rtd::
 
             --scalw rtd --command 0 ; reset RTD calibration, wakeup device
@@ -184,8 +210,13 @@ def main():
             --scalw mcp47x6 --command 350 --value 2345 ; calibration point for DAC for 350 mW power
             --scalw mcp47x6 --command 500 --value 2645 ; calibration point for DAC for 500 mW power
             --scalw mcp47x6 --command 1 ; save mcp47x6 calibration to file
-
             Note: use in conjunction with --argostx to send a packet at calibrated mW
+
+            Thermistor::
+            --scalw thermistor --command 0 ; reset thermistor calibration
+            --scalw thermistor --command 1 --value XXXX; perform for millidegree
+            --scalw thermistor --command 2 ; save for millidegree
+
 
             """)
             return
@@ -206,6 +237,20 @@ def main():
             --scalr cdt --command 5 ; read AD5933 raw sensor imaginary value
             --scalr cdt --command 6 ; read impedence value using stored calibrated gain factor
                                     ; note: must use --scalw --command 6 --value xxx first
+            """)
+            print("""
+            Calibration requires a command.  Use --command to provide a command:
+
+            axl::
+
+            --scalr axl --command 0 ; read X
+            --scalr axl --command 1 ; read Y
+            --scalr axl --command 2 ; read Z
+            --scalr axl --command 3 ; read XYZ
+
+            thermistor::
+
+            --scalr thermistor --command 0 ; read threshold temp
             """)
             return
         print(dev.scalr(args.scalr, args.command))
