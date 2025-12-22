@@ -84,7 +84,11 @@ class BLEDevice(object):
     async def _disconnect_async(self):
         """Disconnects from the remote peripheral. Does nothing if already disconnected."""
         if self._connection_client is not None:
-            await self._connection_client.disconnect()
+            try:
+                await self._connection_client.disconnect()
+            except Exception:
+                pass
+            self._connection_client = None
 
     def _run_bleak_loop(self):
         self._bleak_loop = asyncio.new_event_loop()
