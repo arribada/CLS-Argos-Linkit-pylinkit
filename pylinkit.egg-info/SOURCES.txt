@@ -5,6 +5,7 @@ setup.py
 pylinkit/__init__.py
 pylinkit/__main__.py
 pylinkit/ble.py
+pylinkit/ble_trace.py
 pylinkit/dte.py
 pylinkit/dte_nus.py
 pylinkit/dte_params.py
