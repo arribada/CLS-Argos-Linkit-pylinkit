@@ -52,6 +52,7 @@ parser.add_argument('--value', type=float, default=0, required=False, help='Cali
 parser.add_argument('--ano', type=argparse.FileType('rb'), required=False, help='GNSS AssistNow Offline filename')
 parser.add_argument('--version', action='store_true', required=False, help='Show the version number and exit')
 parser.add_argument('--pwron', type=str, choices=pwr_options, required=False, help='Power on the device (GNSS, SENSORS, SATELLITE)')
+parser.add_argument('--ble-trace', action='store_true', required=False, help='Read BLE trace output from RSPB board')
 
 args = parser.parse_args()
 
@@ -266,6 +267,41 @@ def main():
         result = scan_dev.scan()
         for x in result:
             print(x.address, x.name)
+
+    if args.ble_trace:
+        import subprocess
+        import os
+
+        def configure_ble_mode(address):
+            """Configure device to use BLE debug output mode."""
+            import time
+            print(f"\nConfiguring device {address} for BLE trace output...")
+            temp_dev = pylinkit.Tracker(address)
+            temp_dev.sync()
+            temp_dev.set({'DEBUG_OUTPUT_MODE': 'BLE'})
+            print("Configuration updated: DEBUG_OUTPUT_MODE = BLE")
+            del temp_dev
+            print("Waiting for BLE connection to be released...")
+            time.sleep(3)
+
+        device_address = args.device
+
+        if device_address:
+            response = input("\nIs the device configured with DEBUG_OUTPUT_MODE = BLE? (y/n): ")
+            if response.lower() != 'y':
+                configure_ble_mode(device_address)
+
+        ble_trace_script = os.path.join(os.path.dirname(__file__), 'ble_trace.py')
+
+        try:
+            cmd = [sys.executable, ble_trace_script]
+            if device_address:
+                cmd.append(device_address)
+            process = subprocess.run(cmd)
+            sys.exit(process.returncode)
+        except KeyboardInterrupt:
+            print("\n\n=== Trace listener stopped ===")
+            sys.exit(0)
 
 
 if __name__ == "__main__":

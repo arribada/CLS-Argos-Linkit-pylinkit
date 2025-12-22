@@ -57,7 +57,7 @@ class BLEDevice(object):
         for all advertisements heard.
         """
         if not self._scanner:
-            self._scanner = BleakScanner(loop=self._bleak_loop)
+            self._scanner = BleakScanner()
 
         await self._scanner.start()
         await asyncio.sleep(interval)
