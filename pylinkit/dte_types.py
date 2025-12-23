@@ -237,6 +237,18 @@ class DEBUGMODE():
         return DEBUGMODE.allowed[int(value)]
 
 
+class AXLPOWERMODE():
+    allowed = ['LOWPOWER', 'NORMAL']
+
+    @staticmethod
+    def encode(value):
+        return str(AXLPOWERMODE.allowed.index(value))
+
+    @staticmethod
+    def decode(value):
+        return AXLPOWERMODE.allowed[int(value)]
+
+
 class PRESSURESENSORLOGGINGMODE():
     allowed = ['ALWAYS', 'UW_THRESHOLD']
 
