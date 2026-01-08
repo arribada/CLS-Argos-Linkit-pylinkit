@@ -15,10 +15,12 @@ Requires-Python: >=3.0
 Requires-Dist: service_identity
 Requires-Dist: pyasn1
 Requires-Dist: bleak
-Requires-Dist: kivy
+Provides-Extra: gui
+Requires-Dist: kivy; extra == "gui"
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
+Dynamic: provides-extra
 Dynamic: requires-dist
 Dynamic: requires-python
 Dynamic: summary
